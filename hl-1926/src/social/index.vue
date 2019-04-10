@@ -1,27 +1,25 @@
 <template>
     <section class="social-warp">
-        <div class="social-card" v-for="(item,index) in socialData" :key="index">
-            <div class="img">
-                <img class="overlay-scale" :src="item.socialImg" alt="">
-                <button class="p-l-6 p-r-6 p-t-6 p-b-6">阅读全文</button>
-            </div>
-            <div class="card-block">
-                <p class="card-text type-link">
-                    {{ item.socialType }}
-                    <a href="">{{ item.sociaName }}</a>
-                    <a href="">{{ item.socialDay }}</a>
+        <!-- blogData -->
+        <div class="flex-warp" v-for="(item,index) in socialData" :key="index">
+            <!-- <div class="bg-warp" :style="{background:'url('+item.userBgimg+')'}"></div> -->
+            <img :src="item.userBgimg" alt="">
+            <div class="vertical-align">
+                <div class="vertical-align-middle">
                     <a href="">
-                        <span>{{ item.socialComment }}</span>
-                        评论
+                        <img class="overlay-scale" :src="item.userIcon" alt="">
                     </a>
-                </p>
-                <div class="card-title m-b-20">{{ item.socialTitle }}</div>
-                <div class="card-text">{{ item.socialDec }}</div>
+                </div>
+                <div class="user-name m-t-10">{{item.userName}}</div>
+                <div class="user-dec m-t-10">{{item.userDec}}</div>
+                <div class="user-bnt m-t-12">
+                    <button class="btn-primary p-l-16 p-r-16 p-t-10 p-b-10">关注</button>
+                </div>
             </div>
-            <div class="card-block">
-                <div class="card-actions">
-                    <a href="">喜欢：{{ item.socialLike }}</a>
-                    <a href="">阅读：{{ item.socialRead }}</a>
+            <div class="card-footer">
+                <div v-for="(zitem,im) in item.userRelevant">
+                    <span>{{zitem.relevantName}}</span>
+                    <p>{{zitem.relevantVal}}</p>
                 </div>
             </div>
         </div>
@@ -30,121 +28,116 @@
 <style lang="scss" scoped>
     @import "../assets/scss/mixin";
     .social-warp{
-        @include px2rem(height, 660);
-        .social-card{
-            width: 49%;
+        // display: flex;
+        background: #f1f4f5;
+        position: relative;
+        min-height: 100%;
+        .flex-warp{
+            // flex: 0 0 33.333%;
+            width: 32.333333333333336%;
             margin-left: .5%;
             margin-right: .5%;
+            margin-top: 1%;
             display: inline-block;
-            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+            @include px2rem(height, 660);
             background: #fff;
-            .img{
-                width: 100%;
-                padding: 0;
-                border-bottom: none;
-                display: inline-block;
-                position: relative;
-                -webkit-transform: translateZ(0);
-                transform: translateZ(0);
-                border-radius: 3px;
-                overflow: hidden;
-                position: relative;
-                img{
-                    width: 100%;
-                }
-                button{
-                    border: 1px solid #fff;
-                    color: #fff;
-                    border-radius: 3px;
-                    @include px2rem(height, 62);
-                    @include px2rem(width, 150);
-                    @include px2rem(font-size, 24);
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    @include px2rem(margin-left, -75);
-                    @include px2rem(margin-top, -31);
-                    background: none;
-                    visibility: hidden;
-                }
-            }
-            .overlay-scale{
+            position: relative;
+            .overlay-scale {
                 -webkit-transform: scale(1);
                 transform: scale(1);
                 -webkit-transition-timing-function: ease-out;
                 transition-timing-function: ease-out;
-                -webkit-transition-duration: .5s;
-                transition-duration: .5s;
-                -webkit-transition-property: opacity transform filter;
-                transition-property: opacity transform filter
+                -webkit-transition-duration: .3s;
+                transition-duration: .3s;
             }
-            .img:hover{
-                button{
-                    visibility: visible;
+
+            .overlay-scale:hover  {
+                -webkit-transform: scale(1.1);
+                transform: scale(1.1)
+            }
+            img{
+                width: 100%;
+                height: calc(100% - 100px);
+            }
+            .vertical-align{
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                padding: 20px;
+                color: #fff;
+            }
+            .vertical-align-middle{
+                max-width: 100%;
+                text-align: center;
+                a{
+                    padding: 3px;
+                    border: 1px solid #e4eaec;
+                    width: 100px;
+                    height: 100px;
+                    white-space: nowrap;
+                    vertical-align: bottom;
+                    border-radius: 1000px;
+                    display: inline-block;
+                    background: #fff;
+                    img{
+                        width: 100%;
+                        height: auto;
+                        border: 0;
+                        border-radius: 1000px;
+                    }
+                }
+            }
+            .user-name{
+                color: #fff;
+                font-weight: bold;
+                @include px2rem(font-size, 36);
+                text-align: center;
+            }
+            .user-dec{
+                color: #bdbdbd;
+                @include px2rem(font-size, 26);
+                text-align: center;
+            }
+            .user-bnt{
+                text-align: center;
+                .btn-primary {
+                    color: #fff;
+                    background-color: #3e8ef7;
+                    border-color: #3e8ef7;
+                    box-shadow: none;
+                    border-radius: 3px;
+                    @include px2rem(font-size, 22);
                     cursor: pointer;
                 }
-                .overlay-scale{
-                    -webkit-transform: scale(1.1);
-                    transform: scale(1.1);
-                }
             }
-            .card-block{
-                position: relative;
-                -webkit-box-flex: 1;
-                -webkit-flex: 1 1 auto;
-                -ms-flex: 1 1 auto;
-                flex: 1 1 auto;
-                padding: .3rem;
-            }
-            .type-link{
-                a{
-                    position: relative;
-                    display: inline-block;
-                    padding: 3px 8px;
-                    color: #a3afb7;
-                    text-decoration: none;
-                }
-                a:hover{
-                     color: #ccd5db;
-                     text-decoration: underline;
-                }
-                a+a:before {
-                    content: "";
-                    position: absolute;
-                    top: 10px;
-                    left: -2px;
-                    width: 3px;
-                    height: 3px;
-                    background-color: #a3afb7;
-                    border-radius: 50%;
-                }
-            }
-            .card-title{
-                font-family: Roboto,sans-serif;
-                font-weight: 400;
-                line-height: 1.2;
-                color: #37474f;
-                @include px2rem(font-size, 28);
-            }
-            .card-text{
-                @include px2rem(font-size, 20);
-            }
-            .card-actions{
-                a{
-                    display: inline-block;
-                    @include px2rem(margin-right, 20);
-                    color: #a3afb7;
-                    text-decoration: none;
-                }
-                a:hover{
-                    color: #ccd5db;
-                    text-decoration: underline;
-                    font-weight: 600;
+            .card-footer{
+                display: flex;
+                div{
+                    flex: 1;
+                    @include px2rem(margin-top, 26);
+                    text-align: center;
+                    span{
+                        color: #76838f;
+                        @include px2rem(font-size, 24);
+                    }
+                    p{
+                        color: #37474f;
+                        @include px2rem(font-size, 36);
+                        margin: 0;
+                        @include px2rem(margin-top, 6);
+                    }
                 }
             }
         }
+        .bg-warp{
+            height: calc(100% - 100px);
+            background-size: cover;
+        }
     }
 </style>
+
 <script>
 import $http from '../service/api.ts'
 export default {

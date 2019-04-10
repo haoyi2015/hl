@@ -1,48 +1,124 @@
 {
     "list":[
         {
-            "socialImg": "/social/sc-bg1.jpg",
-            "socialType": "图文",
-            "socialName": "小榄镇",
-            "socialDay": "6天前",
-            "socialComment": "8",
-            "socialTitle": "造型很像单反的富士中画幅，他爹到底是徕卡还是哈苏",
-            "socialDec": "或许有些朋友不太理解，认为仿旁轴设计、能装“小红点”的快门、下半身皮质包裹机身的富士，应该是穷人的徕卡，而不是哈苏。",
-            "socialLike": "253",
-            "socialRead": "89"
+            "userName":"郭雨萌",
+            "userDec":"设计师",
+            "userIcon":"/blog/1.jpg",
+            "userBgimg":"/blog/view-1.jpg",
+            "userRelevant":[
+                {
+                    "relevantName":"关注",
+                    "relevantVal":"201"
+                },
+                {
+                    "relevantName":"粉丝",
+                    "relevantVal":"101"
+                },
+                {
+                    "relevantName":"微博",
+                    "relevantVal":"301"
+                }
+            ]
         },
         {
-            "socialImg": "/social/sc-bg2.jpg",
-            "socialType": "图文",
-            "socialName": "苏轩",
-            "socialDay": "26天前",
-            "socialComment": "8",
-            "socialTitle": "推荐 6 款 Chrome 插件，省事省力还养眼",
-            "socialDec": "2016 年 4 月，Chrome 以 41.72% 的份额正式超越 IE 成为全球第一大浏览器。自 Chrome 发布以来，它就一直蚕食着其他浏览器的市场占有率。这不仅仅是因为它有着简洁美观的界面设计，也因为它强大的扩展功能，用户能按照自己的喜好去定制浏览器。",
-            "socialLike": "21",
-            "socialRead": "35"
+            "userName":"郭雨萌",
+            "userDec":"设计师",
+            "userIcon":"/blog/2.jpg",
+            "userBgimg":"/blog/view-2.jpg",
+            "userRelevant":[
+                {
+                    "relevantName":"关注",
+                    "relevantVal":"701"
+                },
+                {
+                    "relevantName":"粉丝",
+                    "relevantVal":"201"
+                },
+                {
+                    "relevantName":"微博",
+                    "relevantVal":"501"
+                }
+            ]
         },
         {
-            "socialImg": "/social/sc-bg3.jpg",
-            "socialType": "图文",
-            "socialName": "百度外卖",
-            "socialDay": "16天前",
-            "socialComment": "18",
-            "socialTitle": "工作狂看过来，微软让你们的车变身移动办公室",
-            "socialDec": "2016 IFA 德国柏林消费电子展上，梅赛德斯 – 奔驰宣布与微软合作，推出了 “In Car Office” 项目，意图让客户的汽车变身车载个人助手，在乘车上班过程中可以不浪费一分一秒，更有效率地来完成简单的工作。",
-            "socialLike": "6",
-            "socialRead": "135"
+            "userName":"郭雨萌",
+            "userDec":"设计师",
+            "userIcon":"/blog/2.jpg",
+            "userBgimg":"/blog/view-3.jpg",
+            "userRelevant":[
+                {
+                    "relevantName":"关注",
+                    "relevantVal":"1101"
+                },
+                {
+                    "relevantName":"粉丝",
+                    "relevantVal":"201"
+                },
+                {
+                    "relevantName":"微博",
+                    "relevantVal":"801"
+                }
+            ]
         },
         {
-            "socialImg": "/social/sc-bg4.jpg",
-            "socialType": "图文",
-            "socialName": "轩时段",
-            "socialDay": "16天前",
-            "socialComment": "18",
-            "socialTitle": "百度官方、华兴资本辟谣：百度外卖、糯米业务出售给美团传言不实",
-            "socialDec": "据 The verge 报道，沃尔沃与奥托立夫将共同把他们的自动驾驶技术和知识产权迁移到双方成立的合资公司之中，新公司总部将设在沃尔沃的 “老家” 瑞典哥德堡。",
-            "socialLike": "21",
-            "socialRead": "35"
+            "userName":"郭雨萌",
+            "userDec":"设计师",
+            "userIcon":"/blog/2.jpg",
+            "userBgimg":"/blog/view-3.jpg",
+            "userRelevant":[
+                {
+                    "relevantName":"关注",
+                    "relevantVal":"1101"
+                },
+                {
+                    "relevantName":"粉丝",
+                    "relevantVal":"201"
+                },
+                {
+                    "relevantName":"微博",
+                    "relevantVal":"801"
+                }
+            ]
+        },
+        {
+            "userName":"郭雨萌",
+            "userDec":"设计师",
+            "userIcon":"/blog/1.jpg",
+            "userBgimg":"/blog/view-1.jpg",
+            "userRelevant":[
+                {
+                    "relevantName":"关注",
+                    "relevantVal":"201"
+                },
+                {
+                    "relevantName":"粉丝",
+                    "relevantVal":"101"
+                },
+                {
+                    "relevantName":"微博",
+                    "relevantVal":"301"
+                }
+            ]
+        },
+        {
+            "userName":"郭雨萌",
+            "userDec":"设计师",
+            "userIcon":"/blog/2.jpg",
+            "userBgimg":"/blog/view-2.jpg",
+            "userRelevant":[
+                {
+                    "relevantName":"关注",
+                    "relevantVal":"701"
+                },
+                {
+                    "relevantName":"粉丝",
+                    "relevantVal":"201"
+                },
+                {
+                    "relevantName":"微博",
+                    "relevantVal":"501"
+                }
+            ]
         }
     ]
 }
