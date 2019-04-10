@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Social from './social/index.vue'
+import Blog from './blog/index.vue'
+
 
 Vue.use(Router)
 
@@ -10,6 +13,16 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/social',
+      name: 'social',
+      component: Social
+    },
+    {
+      path: '/blog',
+      name: 'blog',
+      component: Blog
     },
     {
       path: '/about',
