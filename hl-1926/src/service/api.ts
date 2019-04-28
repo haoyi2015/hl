@@ -13,6 +13,10 @@ const APICONGIF = {
     // 社交数据
     getSocialInfo: function (params: any) {
         return setRequest.get("mock/social.json", params)
+    },
+    // 时间轴
+    getHomeList: function (params: any) {
+        return setRequest.get("mock/home.js", params)
     }
 }
 export default APICONGIF

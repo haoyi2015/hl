@@ -5,14 +5,29 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div> -->
-    <div class="hl-content m-t-105">
-      <router-view/>
+    <div class="hl-content m-t-100">
+      <transition name="fade">
+        <router-view ></router-view>
+      </transition>
     </div>
   </div>
 </template>
 
 <style lang="scss">
 @import "./assets/scss/mixin";
+.fade-enter {
+  opacity:0;
+}
+.fade-leave{
+  opacity:1;
+}
+.fade-enter-active{
+  transition:opacity .5s;
+}
+.fade-leave-active{
+  opacity:0;
+  transition:opacity .5s;
+}
 #app,html,body{
   height: 100%;
   font-family: Roboto,sans-serif;
@@ -22,7 +37,6 @@
   color: #76838f;
 }
 .hl-content{
-  // @include px2rem(ma, 100);
   min-height: 100%;
   background: #f1f4f5;
 }

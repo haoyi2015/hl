@@ -12,7 +12,8 @@
     "vue": "^2.6.6",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^8.0.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-skeleton-webpack-plugin": "^1.2.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.5",

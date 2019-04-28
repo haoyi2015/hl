@@ -152,7 +152,7 @@ export default {
             this.socialData = res.list
         })
         .catch(error => {
-            console.log(error   )
+            console.log(error)
         })
     }
 }

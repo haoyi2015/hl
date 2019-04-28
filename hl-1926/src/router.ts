@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Social from './social/index.vue'
 import Blog from './blog/index.vue'
+import ScrollTop from './examples/scrollTop/scrollTop.vue'
+import Examples from './examples/index.vue'
+import ScrollTopVelocity from './examples/scrollTop/velocity.vue'
 
 
 Vue.use(Router)
@@ -22,7 +25,26 @@ export default new Router({
     {
       path: '/blog',
       name: 'blog',
-      component: Blog
+      component: ScrollTop
+    },
+    {
+      path: '/examples',
+      name: 'Examples',
+      component: Examples,
+      children:[
+        {
+            path: '/scrollTop',
+            meta: { requiresAuth: true },
+            component: ScrollTop
+            // component: resolve => require(['../components/chat/chatRecord.vue'], resolve)
+        },
+        {
+          path: '/scrollTop-velocity',
+          meta: { requiresAuth: true },
+          component: ScrollTopVelocity
+          // component: resolve => require(['../components/chat/chatRecord.vue'], resolve)
+      }
+      ]
     },
     {
       path: '/about',

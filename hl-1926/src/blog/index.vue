@@ -2,7 +2,7 @@
     <section class="blog-warp">
         <div class="blog-card" v-for="(item,index) in blogData" :key="index">
             <div class="img">
-                <img class="overlay-scale" :src="item.blogImg" alt="">
+                <img class="overlay-scale" v-lazy="item.blogImg" alt="">
                 <button class="p-l-6 p-r-6 p-t-6 p-b-6">阅读全文</button>
             </div>
             <div class="card-block">
@@ -147,6 +147,17 @@
 </style>
 <script>
 import $http from '../service/api.ts'
+import lazy from '../components/lazyload'
+import Vue from 'vue'
+import VueLazyload from '../components/lazyload'
+// 或者添加VueLazyload 选项
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  error: '/favicon.ico',
+  loading: '/images/loading-lazy.gif',
+  attempt: 1,
+  listenEvents: [ 'scroll' ]
+})
 export default {
     data () {
         return {
