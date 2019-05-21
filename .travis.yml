@@ -1,0 +1,27 @@
+language: node_js
+node_js: stable
+cache:
+  directories:
+  - node_modules
+install:
+- yarn install
+before_script: 
+script:
+- yarn build
+after_script:
+- cd ./dist
+
+branches:
+  only:
+  - master
+notifications:
+  slack:
+    rooms:
+      - totorocorp:k4RhBu6TpTLBdQ1hPTKMSglB#web-notification
+    on_success: always
+    on_failure: always
+    template:
+    - Repo `%{repository_slug}`build (<%{build_url}|#%{build_number}>) for commit
+      (<%{compare_url}|%{commit}>) on branch `%{branch}` by `%{author}`.
+    - 'Execution time: *%{duration}*'
+    - 'Message: %{message}'
