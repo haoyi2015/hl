@@ -29,7 +29,7 @@
     @import "../assets/scss/mixin";
     .social-warp{
         // display: flex;
-        background: #f1f4f5;
+        // background: #f1f4f5;
         position: relative;
         min-height: 100%;
         .flex-warp{

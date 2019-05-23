@@ -1,32 +1,91 @@
 <template>
     <header>
-        <router-link v-for="(menu,index) in hedMenu" :to="menu.url" class="top-menu m-l-10" :class="{'index-nav-frame-line':menu.menuList}">
-            {{ menu.name }}
-            <!-- <div class="index-nav-frame-line-center" v-show="menu.menuList">
-                <div class="index-nav-frame-line-li" v-for="(menuZi,index) in menu.menuList">
-                    <router-link :to="menuZi.url">
-                        {{ menuZi.name }}
+        <section class="div_content">
+            <div class="ul-header border-1px">
+                <div class="left-menu-list">
+                    <router-link v-for="(menu,index) in hedMenu" :to="menu.url" class="top-menu m-l-10" :class="{'index-nav-frame-line':menu.menuList}">
+                        {{ menu.name }}
+                        <!-- <div class="index-nav-frame-line-center" v-show="menu.menuList">
+                            <div class="index-nav-frame-line-li" v-for="(menuZi,index) in menu.menuList">
+                                <router-link :to="menuZi.url">
+                                    {{ menuZi.name }}
+                                </router-link>
+                            </div>
+                        </div>  -->
                     </router-link>
                 </div>
-            </div>  -->
-        </router-link>
+            </div>
+        </section>
+        <div class="fixedbg"></div>
         <!-- <router-link to="/social" class="m-l-10 p-l-30 p-r-30">社交</router-link> -->
         <!-- <router-link to="/blog" class="m-l-10 p-l-30 p-r-30">博客</router-link> -->
     </header>
 </template>
 <style lang="scss" scoped>
     @import "../assets/scss/mixin";
+    .div_content{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        line-height: 40px;
+        z-index: 999999;
+        background: rgba(0,0,0,.8);
+    }
+    .ul-header{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        line-height: 40px;
+        z-index: 111;
+        margin: 0;
+        font-size: 0;
+        padding: 0 20px;
+    }
+    .left-menu-list a {
+        list-style: none;
+        display: inline-block;
+        font-size: 14px;
+        padding: 0 14px;
+        margin: 0;
+        color: #fff;
+        cursor: pointer;
+        font-family: Segoe UI,Segoe,Tahoma,Arial,Verdana,sans-serif;
+        text-decoration: none;
+    }
+    .fixedbg {
+        position: fixed;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #000;
+        background-image: url(http://www.bing.com/th?id=OHR.SeaCliffBridge_ZH-CN5362667487_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp);
+        background-size: cover;
+        background-position: center center;
+        height: 100%;
+        width: 100%;
+    }
+    .div_content .ul-header .left-menu-list a.router-link-active li {
+        color: #ccc;
+        border-bottom: 1px solid #f4c2ec;
+    }
+
     .top-menu{
         position: relative;
     }
-    header {
+    .header {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         display: flex;
-        @include px2rem(height, 100);
-        @include px2rem(line-height, 100);
+        @include px2rem(height, 68);
+        @include px2rem(line-height, 68);
         background-color: #3e8ef7;
         color: #ffffff;
         text-align: center;
@@ -34,8 +93,8 @@
         a{
             color: #fff;
             text-decoration: none;
-            @include px2rem(font-size, 30);
-             @include px2rem(min-width, 200);
+            @include px2rem(font-size, 24);
+             @include px2rem(min-width, 100);
         }
         a.router-link-active,
         a:hover{

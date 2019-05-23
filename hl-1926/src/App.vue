@@ -5,7 +5,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div> -->
-    <div class="hl-content m-t-100">
+    <div class="hl-content p-t-80">
       <transition name="fade">
         <router-view ></router-view>
       </transition>
@@ -38,7 +38,8 @@
 }
 .hl-content{
   min-height: 100%;
-  background: #f1f4f5;
+  // background: #f1f4f5;
+  background: rgba(51, 51, 51, .5);
 }
 </style>
 <script>

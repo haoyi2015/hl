@@ -6,14 +6,33 @@ import Blog from './blog/index.vue'
 import ScrollTop from './examples/scrollTop/scrollTop.vue'
 import Examples from './examples/index.vue'
 import ScrollTopVelocity from './examples/scrollTop/velocity.vue'
+import Calendar from './examples/calendar.vue'
+//js 相关路由
+import Javascript from './JS/index.vue'
+import StringCont from './JS/string.vue'
+import Content from './content/index.vue'
 
 
 Vue.use(Router)
 
+// let routers = []
+// const routerContext = require.context('./',true,/index\.js$/)
+// routerContext.keys().forEach(route => {
+//     //如果是根目录路由(过滤)
+//     if(route.startsWith('./index')){
+//         return
+//     }
+//     const routerModule = routerContext(route)
+//     /**
+//      * 兼容 import export 和require module.export
+//      */
+//     routers = [...routers,...(routerModule.default || routerModule)]
+// });
+
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
       component: Home
     },
@@ -25,7 +44,17 @@ export default new Router({
     {
       path: '/blog',
       name: 'blog',
-      component: ScrollTop
+      component: Blog
+    },
+    {
+      path: '/content',
+      name: 'Content',
+      component: Content
+    },
+    {
+      path: '/calendar',
+      name: 'Calendar',
+      component: Calendar
     },
     {
       path: '/examples',
@@ -44,6 +73,19 @@ export default new Router({
           component: ScrollTopVelocity
           // component: resolve => require(['../components/chat/chatRecord.vue'], resolve)
       }
+      ]
+    },
+    {
+      path: '/javascript',
+      name: 'Javascript',
+      component: Javascript,
+      children:[
+        {
+            path: '/string-cont',
+            meta: { requiresAuth: true },
+            component: StringCont
+            // component: resolve => require(['../components/chat/chatRecord.vue'], resolve)
+        }
       ]
     },
     {

@@ -1,5 +1,9 @@
 let hedMenu =[
     {
+        'name': '首页',
+        'url': '/home'
+    },
+    {
         'name': '社交',
         'url': '/social'
     },
@@ -20,6 +24,10 @@ let hedMenu =[
                 'url': '/scrollTop-velocity'
             }
         ]
+    },
+    {
+        'name': '布局实例',
+        'url': '/content'
     }
 ]
 export {
