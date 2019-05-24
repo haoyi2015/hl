@@ -132,15 +132,11 @@
     </div>
   </section>
 </template>
-<style lang="scss" scoped>
-@import url("/JS/css/b40bdc.css");
+<style scoped>
+@import url("/css/b40bdc.css");
 .app,
 .blog-container {
   background: #fff;
-}
-.issue-list {
-//   overflow: auto;
-//   max-height: 460px;
 }
 </style>
 <script>
@@ -151,7 +147,7 @@ export default {
     },
     data () {
         return {
-            
+
         }
     }
 }

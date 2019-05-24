@@ -104,17 +104,17 @@
             font-size: .36rem;
             font-family:SFProDisplay-Regular;
             font-weight:600;
-            color:rgba(74,74,74,1);
+            color:#333;
             line-height:32px;
             a{
-                color:rgba(74,74,74,1);
+                color:#fff;
             }
         }
         .vippl-cell__ft {
             padding-right: 13px;
             position: relative;
             text-align: right;
-            color: #808080;
+            color:#fff;
             font-size: 0.3rem;
         }
         .vippl-cell__ft:after {

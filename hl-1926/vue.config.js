@@ -22,12 +22,12 @@ module.exports = {
     // 启用 CSS modules for all css / pre-processor files.
     modules: false
   },
-  plugins: [
+  //plugins: [
     // 热替换，热替换不是刷新
     //new webpack.HotModuleReplacementPlugin()
-  ],
+  //],
   // 提取公共代码
-  optimization: {},
+  // optimization: {},
   devServer: {
     contentBase: './dist',
     host: 'localhost',      // 默认是localhost

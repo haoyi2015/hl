@@ -17,7 +17,7 @@
     </section>
 </template>
 <style lang="scss" scoped>
-    @import url('/JS/css/style.css');
+    @import url('/css/style.css');
     .js-warp{
         .weui-flex__item:hover{
             color: #3e8ef7;

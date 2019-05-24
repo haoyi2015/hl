@@ -12,6 +12,9 @@ import Javascript from './JS/index.vue'
 import StringCont from './JS/string.vue'
 import Content from './content/index.vue'
 
+// 记录
+import Record from './record/index.vue'
+
 
 Vue.use(Router)
 
@@ -31,6 +34,11 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: Home
+    },
     {
       path: '/home',
       name: 'home',
@@ -55,6 +63,11 @@ export default new Router({
       path: '/calendar',
       name: 'Calendar',
       component: Calendar
+    },
+    {
+      path: '/record',
+      name: 'Record',
+      component: Record
     },
     {
       path: '/examples',

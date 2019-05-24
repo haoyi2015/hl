@@ -16,7 +16,8 @@
                 </div>
             </div>
         </section>
-        <div class="fixedbg"></div>
+        <!-- <img src="/bg/1.jpg" alt=""> -->
+        <div id="headBg" class="fixedbg"></div>
         <!-- <router-link to="/social" class="m-l-10 p-l-30 p-r-30">社交</router-link> -->
         <!-- <router-link to="/blog" class="m-l-10 p-l-30 p-r-30">博客</router-link> -->
     </header>
@@ -157,7 +158,24 @@ export default {
         onBlur () {
             const placeholder = this.$refs.placeholder;
             if (placeholder) placeholder.removeAttribute("style");
+        },
+        setBgFun () {
+            let imgs =["bg/1.jpg", "bg/2.jpg", "bg/3.jpg", "bg/4.jpg", "bg/5.jpg"];    //（设定想要显示的图片）
+            let i = 0;
+            let head = document.getElementById("headBg");//获取DIV对象
+                head.style.background = "url(bg/1.jpg)";   //设置图片的初始图片为该路径的图片
+                function time(){
+                    i++;   
+                    i=i%3;         // 超过2则取余数，保证循环在0、1、2之间
+                    head.style.background="url("+imgs[i]+")"; 
+                    
+                }
+                setInterval(time,10000);//循环调用time1()函数，时间间隔为2000ms
+                    //setInterval()函数，按照指定的周期（按毫秒计）来调用函数或表达式
         }
+    },
+    mounted () {
+        this.setBgFun()
     }
 }
 </script>

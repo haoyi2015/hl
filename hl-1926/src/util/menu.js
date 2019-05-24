@@ -12,6 +12,10 @@ let hedMenu =[
         'url': '/blog'
     },
     {
+        'name': 'us记录👣',
+        'url': '/record'
+    },
+    /*{
         'name': '记录',
         'url': '/examples',
         'menuList': [
@@ -24,7 +28,7 @@ let hedMenu =[
                 'url': '/scrollTop-velocity'
             }
         ]
-    },
+    },*/
     {
         'name': '布局实例',
         'url': '/content'
