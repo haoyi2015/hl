@@ -2,8 +2,6 @@
     <section>
         <div v-change-color="color">{{color}}</div>
         <input type="text" @keyup.f2="add"/>
-        <span v-pre>{{ this will not be compiled }}</span>
-        <span v-pre>{{msg}}</span>     即使data里面定义了msg这里仍然是显示的{{msg}}
     </section>
 </template>
 <script>
