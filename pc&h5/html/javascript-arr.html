@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../style/pc.css">
+    <link rel="stylesheet" href="../../style/libs.css">
+</head>
+
+<body>
+    <h3 class="h3">JavaScript数组方法</h3>
+    <div class="column is-9">
+        <div class="content" id="content">
+            <h3 class="title is-3" id="preface">1.1 前言</h3>
+            <div class="box">
+                <p>JavaScript数组方法速查手册极简版中共收了32个数组的常用方法和属性，并根据方法的用途进行重新排序和分类，在文中简要的介绍了方法作用和用例说明。收藏备用吧！</p>
+                <p>文中介绍的过于简单，想更更多理解相关内容还是要多多动手实践！</p>
+
+            </div>
+            <h3 class="title is-3" id="length">2.1 length-长度属性</h3>
+            <div class="box">
+                <p>每个数组都有一个length属性。针对稠密数组，length属性值代表数组中元素的个数。当数组是稀疏数组时，length属性值大于元素的个数。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>  
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 输出 3</span>
+array1<span class="token punctuation">.</span>length <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 输出 [ "a", "b" ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/length" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="isArray">3.1 Array.isArray-类型判定</h3>
+            <div class="box">
+                <p><code>Array.isArray()</code> 数组类型判定。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Array<span class="token punctuation">.</span><span class="token function">isArray</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 输出 true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Array<span class="token punctuation">.</span><span class="token function">isArray</span><span class="token punctuation">(</span><span class="token punctuation">{</span>num<span class="token punctuation">:</span> <span class="token number">123</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//输出 false</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/isArray" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="of">3.2 Array.of-创建数组</h3>
+            <div class="box">
+                <p><code>Array.of()</code> 从可变数量的参数创建数组，不管参数的数量或类型如何。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Array<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [3]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Array<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 输出 [1,2,3]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/of" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="from">3.3 Array.from-创建数组</h3>
+            <div class="box">
+                <p><code>Array.from()</code> 用类数组或可迭代对象创建新数组。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'abcd'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 输出 [ "a", "b", "c", "d" ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 输出 [ 2, 3, 4 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/from" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="find-about">4.1 查找元素</h3>
+            <h4 class="title is-4" id="find">4.1.1 find-按函数查找</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.find()</code> 找到第一个满足检测函数条件的元素，并返回该元素，没找到则返回 undefined。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">&gt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出  4</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/find" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="findIndex">4.1.2 find&#8203;Index-按函数查找</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.find&#8203;Index()</code> 找到第一个满足检测函数条件的元素，并返回该元素索引。找不到返回-1。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span><span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">&gt;</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出  3</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/findIndex" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="indexOf">4.1.3 indexOf-按元素值查找</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.indexOf()</code> 查找元素并返回元素索引值，找不到返回-1。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> arr<span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 2</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 -1</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 -1</span>
+</code></pre>
+                <p>第二个参数表示查找的起始位置。</p>
+
+                <div><a class="button is-link" href="/code/js-array-method/indexOf" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="lastIndexOf">4.1.4 last&#8203;IndexOf-按元素值查找</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.last&#8203;IndexOf()</code> 从后向前查找元素并返回元素索引值，找不到返回 -1。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">,</span> <span class="token string">'d'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">lastIndexOf</span><span class="token punctuation">(</span><span class="token string">'b'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 1</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">lastIndexOf</span><span class="token punctuation">(</span><span class="token string">'e'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 -1</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/lastIndexOf" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="add">4.2 添加元素</h3>
+            <h4 class="title is-4" id="push">4.2.1 push-尾部添加</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.push()</code> 在尾部添加一个或多个元素，返回数组的新长度。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1<span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'d'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 输出 4</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 输出 [ "a", "b", "c", "d" ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/push" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="unshift">4.2.2 unshift-头部添加</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.unshift()</code> 在头部添加一个或多个元素，并返回数组的新长度。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 4</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 3, 4, 5, 6 ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 6</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 1, 2, 3, 4, 5, 6 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/unshift" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="delete">4.3 删除元素</h3>
+            <h4 class="title is-4" id="pop">4.3.1 pop-尾部删除</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.pop()</code> 从尾部删除一个元素，并返回该元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1<span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">,</span> <span class="token string">'d'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 d</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ "a", "b", "c" ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/pop" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="shift">4.3.2 shift-头部删除</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.shift()</code> 从头部删除一个元素，并返回该元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">shift</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 1</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 2, 3 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/shift" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="replace">4.4 替换元素</h3>
+            <h4 class="title is-4" id="splice">4.4.1 splice-添加替换删除</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.splice()</code> 添加、替换、删除元素。会改变原数组。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">,</span> <span class="token string">'d'</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+array1<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ "a", "b", "c", "d" ]</span>
+array1<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ "a", "c", "d" ]</span>
+array1<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token string">'bb'</span><span class="token punctuation">,</span><span class="token string">'cc'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ "a", "bb", "cc", "d" ]</span>
+</code></pre>
+                <blockquote>
+                    <p><code>array.splice(start[, deleteCount[, item1[, item2[, ...]]]])</code></p>
+                </blockquote>
+                <ul>
+                    <li>参数 <code>start</code>：表示替换的位置</li>
+                    <li>参数 <code>deleteCount</code> ：表示删除元素的数量</li>
+                    <li>参数 <code>item1...</code> ： 表示添加的元素</li>
+                </ul>
+
+                <div><a class="button is-link" href="/code/js-array-method/splice" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="sort-about">4.5 顺序相关</h3>
+            <h4 class="title is-4" id="sort">4.5.1 sort-排序</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.sort()</code> 数组排序，改变原数组。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">2</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 10, 2, 3, 4 ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x1<span class="token punctuation">,</span> x2</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> x1 <span class="token operator">&gt;</span> x2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 2, 3, 4, 10 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/sort" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="reverse">4.5.2 reverse-反序</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.reverse()</code> 倒置数组，并返回新数组。会改变原数组。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> sourceArray<span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> reverseArray <span class="token operator">=</span> sourceArray<span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>reverseArray<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ "c", "b", "a" ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>sourceArray <span class="token operator">==</span> reverseArray<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 true</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/reverse" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="iterator">4.6 遍历迭代</h3>
+            <h4 class="title is-4" id="keys">4.6.1 keys-键迭代器</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.keys()</code> 数组的键迭代器。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> key <span class="token keyword">of</span> array1<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 输出 0, 1, 2</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/keys" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="values">4.6.2 values-值迭代器</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.values()</code> 数组的值迭代器。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">const</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> iterator <span class="token operator">=</span> array1<span class="token punctuation">.</span><span class="token function">values</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> value <span class="token keyword">of</span> iterator<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 输出 a b c</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/values" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="entries">4.6.3 entries-键/值对迭代器</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.entries()</code> 数组的键/值对迭代器。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> iterator1 <span class="token operator">=</span> array1<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>iterator1<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 Array [0, "a"]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>iterator1<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 Array [ 1, "b" ] </span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/entries" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="forEach">4.6.4 for&#8203;Each-遍历</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.for&#8203;Each()</code> 遍历数组中的元素，并执行回调函数。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+arr<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 2  3  4  5</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/forEach" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="detect">4.7 检测</h3>
+            <h4 class="title is-4" id="includes">4.7.1 includes-值包含检测</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.includes()</code> 值包含检测，如包含返回 true，不包含返回false。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 false</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/includes" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="some">4.7.2 some-函数包含检测</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.some()</code> 检测数组中是否有元素可以通过检测函数验证。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">some</span><span class="token punctuation">(</span><span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">&gt;</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出  true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">some</span><span class="token punctuation">(</span><span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出  false</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/some" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="every">4.7.3 every-函数完全检测</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.every()</code> 检测数组中是否所有元素都可以通过检测函数验证。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">every</span><span class="token punctuation">(</span><span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">&lt;</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//输出 true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">every</span><span class="token punctuation">(</span><span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">&lt;</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//输出 false</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/every" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="union">4.8 合并</h3>
+            <h4 class="title is-4" id="join">4.8.1 join-合并成字符串</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.join()</code> 合并数组中所有元素成为字符串并返回。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1<span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 a,b,c</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">"-"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 输出 a-b-c</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/join" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="concat">4.8.2 concat-合并成数组</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.concat()</code> 合并两个或多个数组，返回一个全新数组，原数组不变。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> array2 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token string">'c'</span><span class="token punctuation">,</span> <span class="token string">'d'</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>array2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ "a", "b", "c", "d" ]</span>
+</code></pre>
+                <p>该方法可以有多个参数。</p>
+
+                <div><a class="button is-link" href="/code/js-array-method/concat" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="accumulator">4.9 累计</h3>
+            <h4 class="title is-4" id="reduce">4.9.1 reduce-左侧累计</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.reduce()</code> 从左至右按 <code>reducer</code> 函数组合元素值，并返回累计器终值。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">const</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">reducer</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">accumulator<span class="token punctuation">,</span> currentValue</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> accumulator <span class="token operator">+</span> currentValue<span class="token punctuation">;</span>
+<span class="token comment">// 1 + 2 + 3 + 4</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span>reducer<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 10</span>
+<span class="token comment">// 5 + 1 + 2 + 3 + 4</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span>reducer<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 15，其中5是累计器初始值。</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/reduce" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="reduceRight">4.9.2 reduce&#8203;Right-右侧累计</h4>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.reduce&#8203;Right()</code> 从右至左按 <code>reducer</code>
+                    函数组合元素值，并返回累计器终值。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">const</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">reducer</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">accumulator<span class="token punctuation">,</span> currentValue</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> accumulator<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>currentValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">reduceRight</span><span class="token punctuation">(</span>reducer<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 4, 3, 2, 1 ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">reduceRight</span><span class="token punctuation">(</span>reducer<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 5, 4, 3, 2, 1 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/reduceRight" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="copyWithin">4.10 copy&#8203;Within-内部复制</h3>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.copy&#8203;Within()</code> 数组内部复制，不改变原数组长度。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">,</span> <span class="token string">'d'</span><span class="token punctuation">,</span> <span class="token string">'e'</span><span class="token punctuation">,</span><span class="token string">'f'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">copyWithin</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ "d", "e", "c", "d", "e", "f" ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">copyWithin</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ "d", "d", "e", "f", "e", "f" ]</span>
+</code></pre>
+                <blockquote>
+                    <p><code>arr.copyWithin(target[, start[, end]])</code></p>
+                </blockquote>
+                <ul>
+                    <li>参数<code>target</code> : 表示要复制到的索引位置，如为负值则从后向前计数。</li>
+                    <li>参数<code>start</code> : 表示要复制序列的起始索引位置，如为负值则从后向前计数。如省略该值，则从索引0开始。</li>
+                    <li>参数<code>end</code> : 表示要复制序列的结束位置，如为负值则从后向前计数。如省略该值，则复制到结尾位置。</li>
+                </ul>
+
+                <div><a class="button is-link" href="/code/js-array-method/copyWithin" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="fill">4.11 fill-填充函数</h3>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.fill()</code> 用固定值填充起始索引到终止索引区间内的全部元素值，不包括终止索引。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">fill</span><span class="token punctuation">(</span><span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 1, 2, 9, 9 ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">fill</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// 输出 [ 1, 8, 8, 8 ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">fill</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// 输出 [ 7, 7, 7, 7 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/fill" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="filter">4.12 filter-过滤函数</h3>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.filter()</code> 生成由通过检测函数验证元素组成的新数组并返回。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">9</span> <span class="token punctuation">,</span> <span class="token number">8</span> <span class="token punctuation">,</span> <span class="token number">7</span> <span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">&gt;</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//输出 [ 9, 8 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/filter" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="flat">4.13 flat-数组扁平化</h3>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.flat()</code> 按指定深度递归遍历数组，并返回包含所有遍历到的元素组成的新数组。不改变原数组。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> arr1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span> <span class="token punctuation">]</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr1<span class="token punctuation">.</span><span class="token function">flat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 输出 [ 1, 2, 3, 4 ]</span>
+<span class="token keyword">var</span> arr2 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token punctuation">[</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span> <span class="token punctuation">]</span> <span class="token punctuation">]</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr2<span class="token punctuation">.</span><span class="token function">flat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 1, 2, 3, 4,  [ 5, 6 ] ]</span>
+<span class="token keyword">var</span> arr3 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token punctuation">[</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span> <span class="token punctuation">]</span> <span class="token punctuation">]</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr3<span class="token punctuation">.</span><span class="token function">flat</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 1, 2, 3, 4, 5, 6 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/flat" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="map">4.14 map-映射</h3>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.map()</code> 创建一个新数组，该数组中的元素由原数组元素调用map函数产生。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 输出 [ 2, 4, 6, 8 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/map" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="slice">4.15 slice-截取数组</h3>
+            <div class="box">
+                <p><code>Array&#8203;.prototype&#8203;.slice()</code> 按参数<code>begin</code> 和 <code>end</code>
+                    截取数组，不改变原数组。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span> <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//输出 [ 3, 4 ]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>array1<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//输出 [ 1, 2, 3, 4, 5 ]</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-array-method/slice" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="epilogue">5.1 结语</h3>
+            <div class="box">
+                <p>文中介绍的过于简单，想更多理解相关内容还是要多多动手实践！</p>
+                <p>因时间不足，能力有限等原因，存在文字阐述不准及代码测试不足等诸多问题。如发现错误请不吝指正！谢谢。</p>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

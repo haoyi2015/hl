@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../style/pc.css">
+    <link rel="stylesheet" href="../../style/libs.css">
+</head>
+
+<body>
+    <h3 class="h3">可缩放矢量图（SVG</h3>
+    <div class="column">
+            <div class="content">
+<h2 class="title is-3" id="preface">1 前言</h2>
+<div class="box">
+<p>在工程中经常会用到各种小图标，与其引入图标库或下载图片，自己绘制SVG也是不错的选择。可缩放矢量图（SVG）的优点这里就不做叙述了，但真的是时候好好学习一下神奇的 SVG 了。</p>
+<p>让我们一起马上开始神奇的 SVG 学习之旅吧！</p>
+</div><h2 class="title is-3" id="rect">2.1 矩形-rect</h2>
+<h3 class="title is-4" id="rect-attr">2.1.1 基本属性</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+             x ：定义左侧距离<br>
+             y ：定义顶端距离<br>
+             width ：定义宽度<br>
+             height ：定义高度<br>
+             rx ：X轴方向圆角<br>
+             ry ：Y轴方向圆角
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"100"</span> rx<span class="token operator">=</span><span class="token string">"10"</span> ry<span class="token operator">=</span><span class="token string">"10"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <rect x="10" y="10" width="150" height="100" rx="10" ry="10"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/rect-attr" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="rect-fill">2.1.2 填充样式</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            fill ：定义填充颜色<br>
+            fill-opacity ：定义填充颜色透明度（0-1之间）
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"100"</span> style<span class="token operator">=</span><span class="token string">"fill:blue;fill-opacity:0.25;"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <rect width="150" height="100" style="fill:blue;fill-opacity:0.25;"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/rect-fill" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="rect-stroke">2.1.3 边框样式</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            stroke  ：定义边框颜色 <br>
+            stroke-width ：定义边框宽度  <br>
+            stroke-opacity ：定义边框透明度
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"100"</span>
+style<span class="token operator">=</span><span class="token string">"stroke:blue;stroke-width:2; stroke-opacity: 0.5; fill:white;"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <rect x="10" y="10" width="150" height="100" style="stroke:blue;stroke-width:2; stroke-opacity: 0.5; fill:white;"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/rect-stroke" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+<h2 class="title is-3" id="circle">2.2 圆形-circle</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            cx ：定义X轴坐标 <br>
+            cy ：定义Y轴坐标 <br>
+            r ：定义半径 <br>
+            fill ：定义填充颜色 <br>
+            stroke ：定义轮廓颜色
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle cx<span class="token operator">=</span><span class="token string">"80"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> r<span class="token operator">=</span><span class="token string">"75"</span> fill<span class="token operator">=</span><span class="token string">"red"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.1"</span>
+stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"2"</span> stroke<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.5"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="170">
+                    <circle cx="80" cy="80" r="75" fill="red" fill-opacity="0.1" stroke="blue" stroke-width="2" stroke-opacity="0.5"></circle>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/circle" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="ellipse">2.3 椭圆-ellipse</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            cx ：定义圆心X轴坐标 <br>
+            cy ：定义圆心Y轴坐标 <br>
+            rx ：定义X轴半径 <br>
+            ry ：定义Y轴半径
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>ellipse cx<span class="token operator">=</span><span class="token string">"85"</span> cy<span class="token operator">=</span><span class="token string">"60"</span> rx<span class="token operator">=</span><span class="token string">"80"</span> ry<span class="token operator">=</span><span class="token string">"50"</span> style<span class="token operator">=</span>"fill<span class="token punctuation">:</span>red<span class="token punctuation">;</span> fill<span class="token operator">-</span>opacity<span class="token punctuation">:</span> <span class="token number">0.1</span><span class="token punctuation">;</span>
+stroke<span class="token punctuation">:</span> blue<span class="token punctuation">;</span>stroke<span class="token operator">-</span>width<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">;</span> stroke<span class="token operator">-</span>opacity<span class="token punctuation">:</span> <span class="token number">0.5</span>"<span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <ellipse cx="85" cy="60" rx="80" ry="50" style="fill:red; fill-opacity: 0.1;stroke: blue;stroke-width: 2; stroke-opacity: 0.5"></ellipse>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/ellipse" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="line">2.4 直线-line</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            x1 ：定义起点X轴坐标 <br>
+            y1 ：定义起点Y轴坐标 <br>
+            x2 ：定义终点X轴坐标 <br>
+            y2 ：定义终点Y轴坐标
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>line x1<span class="token operator">=</span><span class="token string">"10"</span> y1<span class="token operator">=</span><span class="token string">"30"</span> x2<span class="token operator">=</span><span class="token string">"160"</span> y2<span class="token operator">=</span><span class="token string">"30"</span>
+style<span class="token operator">=</span><span class="token string">"stroke: red;stroke-width: 2; stroke-opacity: 0.25"</span><span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="110">
+                    <line x1="10" y1="30" x2="160" y2="30" style="stroke: red;stroke-width: 2; stroke-opacity: 0.25"></line>
+                    <line x1="10" y1="60" x2="160" y2="60" style="stroke: green;stroke-width: 2; stroke-opacity: 0.25"></line>
+                    <line x1="10" y1="90" x2="160" y2="90" style="stroke: blue;stroke-width: 2; stroke-opacity: 0.25"></line>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/line" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="polyline">2.5 折线-polyline</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            points ：点集数列。每个数字用逗号分隔开。 <br>
+            每个点必须包含2个数字，一个是x坐标，一个是y坐标。
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>polyline points<span class="token operator">=</span><span class="token string">"10,10,10,90,150,90,150,10"</span>
+style<span class="token operator">=</span><span class="token string">"fill:none;stroke: red;stroke-width: 2; stroke-opacity: 0.25"</span><span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="110">
+                    <polyline points="10,10,10,90,150,90,150,10" style="fill:none;stroke: red;stroke-width: 2; stroke-opacity: 0.25"></polyline>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/polyline" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="polygon">2.6 多边形-polygon</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            points ：点集数列。每个数字用逗号分隔开。 <br>
+            每个点必须包含2个数字，一个是x坐标，一个是y坐标。
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>polygon points<span class="token operator">=</span><span class="token string">"10,10,10,90,150,90,150,60"</span>
+style<span class="token operator">=</span><span class="token string">"fill:none;stroke: red;stroke-width: 2; stroke-opacity: 0.25"</span><span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="110">
+                    <polygon points="10,10,10,90,150,90,150,60" style="fill:none;stroke: red;stroke-width: 2; stroke-opacity: 0.25"></polygon>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/polygon" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="path">2.7 路径-path</h2>
+<h3 class="title is-4" id="path-line">2.7.1 直线命令</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <code>&lt;path&gt;</code>元素是SVG基本形状中最强大的一个，它不仅能创建其他基本形状，还能创建更多其他形状。path只需要设定很少的点，就可以创建平滑流畅的曲线。
+        <blockquote>
+            M x y ：Move to，移动到某一点 <br>
+            L x y ：Line to，画线到某一点 <br>
+            H x ：Horizontal line to ，绘制水平线 <br>
+            V y ：Vertical line to ，绘制垂直线 <br>
+            Z ：Close path ，闭合路径
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path d<span class="token operator">=</span><span class="token string">"M10 10 H 150 V 90 H 10 L 10 10"</span>
+fill<span class="token operator">=</span><span class="token string">"none"</span> stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"2"</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="110px">
+                    <path d="M10 10 H 150 V 90 H 10 L 10 10" fill="none" stroke="blue" stroke-width="2"></path>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/path-line" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="path-q">2.7.2 二次贝塞尔曲线</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            Q x1 y1, x y ：Quadratic Bézier curve，其中 x1 y1 是控制点，x y 是终点
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path d<span class="token operator">=</span><span class="token string">"M10 80 Q 95 10, 180 80"</span> stroke<span class="token operator">=</span><span class="token string">"purple"</span> fill<span class="token operator">=</span><span class="token string">"transparent"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"10"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"red"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"95"</span> cy<span class="token operator">=</span><span class="token string">"10"</span> fill<span class="token operator">=</span><span class="token string">"green"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"180"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"blue"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="200" height="110px">
+                    <path d="M10 80 Q 95 10, 180 80" stroke="purple" stroke-width="2" fill="transparent"></path>
+                    <circle r="3" cx="10" cy="80" fill="red"></circle>
+                    <circle r="3" cx="95" cy="10" fill="green"></circle>
+                    <circle r="3" cx="180" cy="80" fill="blue"></circle>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/path-q" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="path-q-t">2.7.3 二次贝塞尔曲线延伸</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            T x y ： Smooth Quadratic Bézier curve to，其中 x y 是延伸部分的终点 <br>
+            T 命令前必须有 Q 命令或另一个 T 命令
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path d<span class="token operator">=</span><span class="token string">"M10 80 Q 52.5 10, 95 80 T 180 80"</span> stroke<span class="token operator">=</span><span class="token string">"purple"</span> fill<span class="token operator">=</span><span class="token string">"transparent"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"10"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"red"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"52.5"</span> cy<span class="token operator">=</span><span class="token string">"10"</span> fill<span class="token operator">=</span><span class="token string">"green"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"95"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"blue"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"180"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"yellow"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="200" height="140px">
+                    <path d="M10 80 Q 52.5 10, 95 80 T 180 80" stroke="purple" fill="transparent"></path>
+                    <circle r="3" cx="10" cy="80" fill="red"></circle>
+                    <circle r="3" cx="52.5" cy="10" fill="green"></circle>
+                    <circle r="3" cx="95" cy="80" fill="blue"></circle>
+                    <circle r="3" cx="180" cy="80" fill="yellow"></circle>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/path-q-t" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="path-c">2.7.4 三次贝塞尔曲线</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        三次贝塞尔曲线有两个控制点。
+        <blockquote>
+            C x1 y1, x2 y2, x y ： Curve to，其中 x1 y1 是第一控制点，x2 , y2 是第二控制点， x y 是终点
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path d<span class="token operator">=</span><span class="token string">"M10 80 C 50 10, 140 10, 180 80"</span> stroke<span class="token operator">=</span><span class="token string">"purple"</span> fill<span class="token operator">=</span><span class="token string">"transparent"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"10"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"red"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"50"</span> cy<span class="token operator">=</span><span class="token string">"10"</span> fill<span class="token operator">=</span><span class="token string">"green"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"140"</span> cy<span class="token operator">=</span><span class="token string">"10"</span> fill<span class="token operator">=</span><span class="token string">"blue"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"180"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"yellow"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="200" height="110px">
+                    <path d="M10 80 C 50 10, 140 10, 180 80" stroke="purple" fill="transparent"></path>
+                    <circle r="3" cx="10" cy="80" fill="red"></circle>
+                    <circle r="3" cx="50" cy="10" fill="green"></circle>
+                    <circle r="3" cx="140" cy="10" fill="blue"></circle>
+                    <circle r="3" cx="180" cy="80" fill="yellow"></circle>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/path-c" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="path-c-s">2.7.5 三次贝塞尔曲线延伸</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            S x2 y2, x y ： Smooth Curve to，其中 x2 y2 是延伸部分第二控制点， x y 是终点
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path d<span class="token operator">=</span><span class="token string">"M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"</span>
+ stroke<span class="token operator">=</span><span class="token string">"purple"</span> fill<span class="token operator">=</span><span class="token string">"transparent"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"10"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"red"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"40"</span> cy<span class="token operator">=</span><span class="token string">"10"</span> fill<span class="token operator">=</span><span class="token string">"green"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"65"</span> cy<span class="token operator">=</span><span class="token string">"10"</span> fill<span class="token operator">=</span><span class="token string">"blue"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"95"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"yellow"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"150"</span> cy<span class="token operator">=</span><span class="token string">"150"</span> fill<span class="token operator">=</span><span class="token string">"pink"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"3"</span> cx<span class="token operator">=</span><span class="token string">"180"</span> cy<span class="token operator">=</span><span class="token string">"80"</span> fill<span class="token operator">=</span><span class="token string">"green"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="200" height="160px">
+                    <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="purple" fill="transparent"></path>
+                    <circle r="3" cx="10" cy="80" fill="red"></circle>
+                    <circle r="3" cx="40" cy="10" fill="green"></circle>
+                    <circle r="3" cx="65" cy="10" fill="blue"></circle>
+                    <circle r="3" cx="95" cy="80" fill="yellow"></circle>
+                    <circle r="3" cx="150" cy="150" fill="pink"></circle>
+                    <circle r="3" cx="180" cy="80" fill="grey"></circle>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/path-c-s" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="path-a">2.7.6 弧形</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            A rx ry x-axis-rotation large-arc-flag sweep-flag x y ： Elliptical Arc <br>
+            rx ry ： X轴半径和Y轴半径 <br>
+            x-axis-rotation ： X轴旋转角度 <br>
+            large-arc-flag ： 角度大小，0表示小角度，1表示大角度 <br>
+            sweep-flag ： 弧线的方向，0表示逆时针，1表示顺时针 <br>
+            x y： 弧形的终点坐标
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path d<span class="token operator">=</span><span class="token string">"M10 150 A 30 50 30 0 1 180 120"</span>
+stroke<span class="token operator">=</span><span class="token string">"purple"</span> fill<span class="token operator">=</span><span class="token string">"transparent"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"2"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="200" height="160">
+                    <path d="M10 150 A 30 50 30 0 1 180 120" stroke="purple" fill="transparent" stroke-width="2"></path>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/path-a" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<h2 class="title is-3" id="text">2.8 文本-text</h2>
+<h3 class="title is-4" id="text-base">2.8.1 基本属性</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            x / y ：表示文本显示坐标。 <br>
+            text-anchor ：文本显示位置[start,middle,end,inherit]
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>text x<span class="token operator">=</span><span class="token string">"100"</span> y<span class="token operator">=</span><span class="token string">"30"</span> text<span class="token operator">-</span>anchor<span class="token operator">=</span><span class="token string">"start"</span> style<span class="token operator">=</span><span class="token string">"font-size:1.5em;"</span><span class="token operator">&gt;</span>三十课<span class="token operator">&lt;</span><span class="token operator">/</span>text<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>text x<span class="token operator">=</span><span class="token string">"100"</span> y<span class="token operator">=</span><span class="token string">"80"</span> text<span class="token operator">-</span>anchor<span class="token operator">=</span><span class="token string">"middle"</span> style<span class="token operator">=</span><span class="token string">"font-size:1.5em;"</span><span class="token operator">&gt;</span>三十课<span class="token operator">&lt;</span><span class="token operator">/</span>text<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>text x<span class="token operator">=</span><span class="token string">"100"</span> y<span class="token operator">=</span><span class="token string">"130"</span> text<span class="token operator">-</span>anchor<span class="token operator">=</span><span class="token string">"end"</span> style<span class="token operator">=</span><span class="token string">"font-size:1.5em;"</span><span class="token operator">&gt;</span>三十课<span class="token operator">&lt;</span><span class="token operator">/</span>text<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="140">
+                    <text x="100" y="30" text-anchor="start" style="font-size:1.5em;">三十课</text>
+                    <text x="100" y="80" text-anchor="middle" style="font-size:1.5em;">三十课</text>
+                    <text x="100" y="130" text-anchor="end" style="font-size:1.5em;">三十课</text>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/text-base" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="text-tspan">2.8.2 文本分组</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            tspan ：文本分组，每个tspan可以包含不同的格式和位置。
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>text x<span class="token operator">=</span><span class="token string">"20"</span> y<span class="token operator">=</span><span class="token string">"30"</span><span class="token operator">&gt;</span>三十课
+  <span class="token operator">&lt;</span>tspan x<span class="token operator">=</span><span class="token string">"40"</span> y<span class="token operator">=</span><span class="token string">"60"</span><span class="token operator">&gt;</span>tspan<span class="token operator">-</span>第一行<span class="token operator">&lt;</span><span class="token operator">/</span>tspan<span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>tspan x<span class="token operator">=</span><span class="token string">"40"</span> y<span class="token operator">=</span><span class="token string">"90"</span><span class="token operator">&gt;</span>tsapn<span class="token operator">-</span>第二行<span class="token operator">&lt;</span><span class="token operator">/</span>tspan<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>text<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="100">
+                    <text x="20" y="30">三十课
+                        <tspan x="40" y="60">第一行</tspan>
+                        <tspan x="40" y="90">第二行</tspan>
+                    </text>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/text-tspan" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="text-link">2.8.3 文本链接</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            a href ：文本链接同HTML链接。
+        </blockquote>
+<pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>a href<span class="token operator">=</span><span class="token string">"http://30ke.cn"</span> target<span class="token operator">=</span><span class="token string">"_blank"</span><span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span>text x<span class="token operator">=</span><span class="token string">"20"</span> y<span class="token operator">=</span><span class="token string">"50"</span> style<span class="token operator">=</span><span class="token string">"font-size: 2.5em;"</span><span class="token operator">&gt;</span>三十课<span class="token operator">&lt;</span><span class="token operator">/</span>text<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>a<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="100">
+                    <a href="http://30ke.cn" target="_blank">
+                        <text x="20" y="50" style="font-size: 2.5em;">三十课</text>
+                    </a>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/text-link" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="text-rotate">2.8.4 文本旋转</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            transform rotate ：按指定坐标整体旋转。<br>
+            rotate ：旋转单个文字。
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>text x<span class="token operator">=</span><span class="token string">"20"</span> y<span class="token operator">=</span><span class="token string">"20"</span>  transform<span class="token operator">=</span><span class="token string">"rotate(30 20,20)"</span><span class="token operator">&gt;</span>三十课网站<span class="token operator">&lt;</span><span class="token operator">/</span>text<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>text x<span class="token operator">=</span><span class="token string">"20"</span> y<span class="token operator">=</span><span class="token string">"90"</span>  rotate<span class="token operator">=</span><span class="token string">"30"</span><span class="token operator">&gt;</span>三十课网站<span class="token operator">&lt;</span><span class="token operator">/</span>text<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="110">
+                    <text x="20" y="20" transform="rotate(30 20,20)">三十课网站</text>
+                    <text x="20" y="90" rotate="30">三十课网站</text>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/text-rotate" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="text-path">2.8.5 路径上的文字</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            path ：定义路径。<br>
+            textPath ：引用路径。
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path id<span class="token operator">=</span><span class="token string">"my_path"</span> d<span class="token operator">=</span><span class="token string">"M10 100 Q 95 10, 180 100"</span> fill<span class="token operator">=</span><span class="token string">"none"</span> stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.1"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>text<span class="token operator">&gt;</span>
+   <span class="token operator">&lt;</span>textPath xlink<span class="token punctuation">:</span>href<span class="token operator">=</span><span class="token string">"#my_path"</span><span class="token operator">&gt;</span>人 人 都 爱  三  十  课  <span class="token number">30</span>ke<span class="token punctuation">.</span>cn <span class="token operator">&lt;</span><span class="token operator">/</span>textPath<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>text<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="190" height="110">
+                    <path id="my_path" d="M10 100 Q 95 10, 180 100" fill="none" stroke="blue" stroke-opacity="0.1"></path>
+                    <text>
+                        <textPath xlink:href="#my_path">人 人 都 爱  三  十  课  30ke.cn </textPath>
+                    </text>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/text-path" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div><h2 class="title is-3" id="image">2.9 图片-image</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            x y ：指定显示坐标，默认值为 0 <br>
+            width ：定义宽度 <br>
+            height ：定义高度
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>image xlink<span class="token punctuation">:</span>href<span class="token operator">=</span><span class="token string">"30ke_icon.png"</span> x<span class="token operator">=</span><span class="token string">"0"</span> y<span class="token operator">=</span><span class="token string">"0"</span> height<span class="token operator">=</span><span class="token string">"164"</span> width<span class="token operator">=</span><span class="token string">"128"</span><span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="130">
+                    <image xlink:href="/image/30ke_icon.png" x="0" y="0" height="164" width="128"></image>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/image" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="fill">3.1 填充-fill</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            fill ：定义填充颜色<br>
+            fill-opacity ：定义填充颜色透明度（0-1之间）
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"100"</span> style<span class="token operator">=</span><span class="token string">"fill:purple;fill-opacity:0.25;"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <rect width="150" height="100" style="fill:purple;fill-opacity:0.25;"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/fill" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div><h2 class="title is-3" id="stroke">3.2 边框-stroke</h2>
+<h3 class="title is-4" id="stroke-base">3.2.1 基本属性</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            stroke  ：定义边框颜色 <br>
+            stroke-width ：定义边框宽度  <br>
+            stroke-opacity ：定义边框透明度
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"100"</span>
+style<span class="token operator">=</span><span class="token string">"stroke:purple;stroke-width:5; stroke-opacity: 0.25; fill:white;"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <rect x="10" y="10" width="150" height="100" style="stroke:purple;stroke-width:5; stroke-opacity: 0.25; fill:white;"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/stroke-base" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="linecap">3.2.2 端点形状-linecap</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            butt ：直角端点 <br>
+            square ：直角端点，长度大于 butt <br>
+            round ：圆角端点 <br>
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>line x1<span class="token operator">=</span><span class="token string">"20"</span> y1<span class="token operator">=</span><span class="token string">"20"</span> x2<span class="token operator">=</span><span class="token string">"150"</span> y2<span class="token operator">=</span><span class="token string">"20"</span> stroke<span class="token operator">-</span>linecap<span class="token operator">=</span><span class="token string">"butt"</span> stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"10"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>line x1<span class="token operator">=</span><span class="token string">"20"</span> y1<span class="token operator">=</span><span class="token string">"55"</span> x2<span class="token operator">=</span><span class="token string">"150"</span> y2<span class="token operator">=</span><span class="token string">"55"</span> stroke<span class="token operator">-</span>linecap<span class="token operator">=</span><span class="token string">"square"</span> stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"10"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>line x1<span class="token operator">=</span><span class="token string">"20"</span> y1<span class="token operator">=</span><span class="token string">"90"</span> x2<span class="token operator">=</span><span class="token string">"150"</span> y2<span class="token operator">=</span><span class="token string">"90"</span> stroke<span class="token operator">-</span>linecap<span class="token operator">=</span><span class="token string">"round"</span> stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"10"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="110">
+                    <line x1="20" y1="20" x2="150" y2="20" stroke="blue" stroke-width="10" stroke-linecap="butt"></line>
+                    <line x1="20" y1="55" x2="150" y2="55" stroke="blue" stroke-width="10" stroke-linecap="square"></line>
+                    <line x1="20" y1="90" x2="150" y2="90" stroke="blue" stroke-width="10" stroke-linecap="round"></line>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/linecap" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="linejoin">3.2.3 连接点形状-linejoin</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            miter ：尖角连接 <br>
+            round ：圆角连接 <br>
+            bevel ：切角连接 <br>
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>polyline points<span class="token operator">=</span><span class="token string">"20 70 90 20 160 70"</span> stroke<span class="token operator">-</span>linejoin<span class="token operator">=</span><span class="token string">"miter"</span> stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"20"</span> fill<span class="token operator">=</span><span class="token string">"none"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>polyline points<span class="token operator">=</span><span class="token string">"20 120 90 70 160 120"</span> stroke<span class="token operator">-</span>linejoin<span class="token operator">=</span><span class="token string">"round"</span> stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"20"</span> fill<span class="token operator">=</span><span class="token string">"none"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>polyline points<span class="token operator">=</span><span class="token string">"20 170 90 120 160 170"</span> stroke<span class="token operator">-</span>linejoin<span class="token operator">=</span><span class="token string">"bevel"</span> stroke<span class="token operator">=</span><span class="token string">"blue"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"20"</span> fill<span class="token operator">=</span><span class="token string">"none"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="180">
+                    <polyline points="20 70 90 20 160 70" stroke-linejoin="miter" stroke="blue" stroke-width="20" fill="none"></polyline>
+                    <polyline points="20 120 90 70 160 120" stroke-linejoin="round" stroke="blue" stroke-width="20" fill="none"></polyline>
+                    <polyline points="20 170 90 120 160 170" stroke-linejoin="bevel" stroke="blue" stroke-width="20" fill="none"></polyline>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/linejoin" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="dasharray">3.2.4 虚线设置-dasharray</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            stroke-dasharray ：参数是一组用逗号分割的数字组成的数列 <br>
+            第一个参数用来表示填色区域的长度 <br>
+            第二参数个用来表示非填色区域的长度
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path stroke<span class="token operator">-</span>dasharray<span class="token operator">=</span><span class="token string">"5,5"</span> d<span class="token operator">=</span><span class="token string">"M10 30 h150"</span> stroke<span class="token operator">=</span><span class="token string">"black"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"2"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path stroke<span class="token operator">-</span>dasharray<span class="token operator">=</span><span class="token string">"10,5"</span> d<span class="token operator">=</span><span class="token string">"M10 65 h150"</span> stroke<span class="token operator">=</span><span class="token string">"black"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"2"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>path stroke<span class="token operator">-</span>dasharray<span class="token operator">=</span><span class="token string">"10,5,5,5,5,5"</span> d<span class="token operator">=</span><span class="token string">"M10 100 h150"</span> stroke<span class="token operator">=</span><span class="token string">"black"</span> stroke<span class="token operator">-</span>width<span class="token operator">=</span><span class="token string">"2"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <path stroke-dasharray="5,5" d="M10 30 h150" stroke="black" stroke-width="2"></path>
+                    <path stroke-dasharray="10,5" d="M10 65 h150" stroke="black" stroke-width="2"></path>
+                    <path stroke-dasharray="10,5,5,5,5,5" d="M10 100 h150" stroke="black" stroke-width="2"></path>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/dasharray" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="lineargradient">4.1 线性渐变-linearGradient</h2>
+<h3 class="title is-4" id="lineargradient-h">4.1.1 水平线性渐变</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>linearGradient id<span class="token operator">=</span><span class="token string">"gradient1"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"red"</span> offset<span class="token operator">=</span><span class="token string">"0%"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"black"</span> stop<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0"</span> offset<span class="token operator">=</span><span class="token string">"50%"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"blue"</span> offset<span class="token operator">=</span><span class="token string">"100%"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>linearGradient<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"160"</span> height<span class="token operator">=</span><span class="token string">"100"</span> fill<span class="token operator">=</span><span class="token string">"url(#gradient1)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <linearGradient id="gradient1">
+                        <stop stop-color="red" offset="0%"></stop>
+                        <stop stop-color="black" stop-opacity="0" offset="50%"></stop>
+                        <stop stop-color="blue" offset="100%"></stop>
+                    </linearGradient>
+                    <rect x="10" y="10" width="160" height="100" fill="url(#gradient1)"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/lineargradient-h" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="lineargradient-v">4.1.2 垂直线性渐变</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>linearGradient id<span class="token operator">=</span><span class="token string">"gradient2"</span> x1<span class="token operator">=</span><span class="token string">"0"</span> y1<span class="token operator">=</span><span class="token string">"0"</span> x2<span class="token operator">=</span><span class="token string">"0"</span> y2<span class="token operator">=</span><span class="token string">"1"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"red"</span> offset<span class="token operator">=</span><span class="token string">"0%"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"black"</span> stop<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0"</span> offset<span class="token operator">=</span><span class="token string">"50%"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"blue"</span> offset<span class="token operator">=</span><span class="token string">"100%"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>linearGradient<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"160"</span> height<span class="token operator">=</span><span class="token string">"100"</span> fill<span class="token operator">=</span><span class="token string">"url(#gradient2)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <linearGradient id="gradient2" x1="0" y1="0" x2="0" y2="1">
+                        <stop stop-color="red" offset="0%"></stop>
+                        <stop stop-color="black" stop-opacity="0" offset="50%"></stop>
+                        <stop stop-color="blue" offset="100%"></stop>
+                    </linearGradient>
+                    <rect x="10" y="10" width="160" height="100" fill="url(#gradient2)"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/lineargradient-v" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="radialgradient">4.2 径向渐变-radialGradient</h2>
+<h3 class="title is-4" id="radialgradient-base">4.2.1 基本径向渐变</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>radialGradient id<span class="token operator">=</span><span class="token string">"radialGradient1"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"0%"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"red"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"100%"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"blue"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>radialGradient<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"160"</span> height<span class="token operator">=</span><span class="token string">"100"</span> fill<span class="token operator">=</span><span class="token string">"url(#radialGradient1)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <radialGradient id="radialGradient1">
+                        <stop offset="0%" stop-color="red"></stop>
+                        <stop offset="100%" stop-color="blue"></stop>
+                    </radialGradient>
+                    <rect x="10" y="10" width="160" height="100" fill="url(#radialGradient1)"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/radialgradient-base" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h3 class="title is-4" id="radialgradient-2">4.2.2 中心与焦点</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            cx cy r ：定义渐变结束圆环 <br>
+            fx fy ：定义焦点位置
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>radialGradient id<span class="token operator">=</span><span class="token string">"radial2"</span> cx<span class="token operator">=</span><span class="token string">"0.5"</span> cy<span class="token operator">=</span><span class="token string">"0.5"</span> r<span class="token operator">=</span><span class="token string">"0.5"</span> fx<span class="token operator">=</span><span class="token string">"0.25"</span> fy<span class="token operator">=</span><span class="token string">"0.25"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"0%"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"red"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"100%"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"blue"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>radialGradient<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"160"</span> height<span class="token operator">=</span><span class="token string">"100"</span> fill<span class="token operator">=</span><span class="token string">"url(#radial2)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="120">
+                    <radialGradient id="radial2" cx="0.5" cy="0.5" r="0.5" fx="0.25" fy="0.25">
+                        <stop offset="0%" stop-color="red"></stop>
+                        <stop offset="100%" stop-color="blue"></stop>
+                    </radialGradient>
+                    <rect x="10" y="10" width="160" height="100" fill="url(#radial2)"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/radialgradient-2" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<h3 class="title is-4" id="radialgradient-3">4.2.3 渐变终点形为</h3>
+<div class="box">
+<div class="columns">
+    <div class="column is-9 max-height">
+        <blockquote>
+            spreadMethod="pad" ：默认，到达终点时，用最终偏移色填充剩余空间 <br>
+            spreadMethod="repeat" ： 到达终点时，重复执行红蓝渐变<br>
+            spreadMethod="reflect" ：到达终点时，反向执行红蓝渐变
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>radialGradient id<span class="token operator">=</span><span class="token string">"radial3"</span> cx<span class="token operator">=</span><span class="token string">"0.5"</span> cy<span class="token operator">=</span><span class="token string">"0.5"</span> r<span class="token operator">=</span><span class="token string">"0.5"</span> fx<span class="token operator">=</span><span class="token string">"0.25"</span> fy<span class="token operator">=</span><span class="token string">"0.25"</span> spreadMethod<span class="token operator">=</span><span class="token string">"repeat"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"0%"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"red"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"100%"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"blue"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>radialGradient<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>radialGradient id<span class="token operator">=</span><span class="token string">"radial4"</span> cx<span class="token operator">=</span><span class="token string">"0.5"</span> cy<span class="token operator">=</span><span class="token string">"0.5"</span> r<span class="token operator">=</span><span class="token string">"0.5"</span> fx<span class="token operator">=</span><span class="token string">"0.25"</span> fy<span class="token operator">=</span><span class="token string">"0.25"</span> spreadMethod<span class="token operator">=</span><span class="token string">"reflect"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"0%"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"red"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"100%"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"blue"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>radialGradient<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"160"</span> height<span class="token operator">=</span><span class="token string">"100"</span> fill<span class="token operator">=</span><span class="token string">"url(#radial3)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"120"</span> width<span class="token operator">=</span><span class="token string">"160"</span> height<span class="token operator">=</span><span class="token string">"100"</span> fill<span class="token operator">=</span><span class="token string">"url(#radial4)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="220">
+                    <radialGradient id="radial3" cx="0.5" cy="0.5" r="0.5" fx="0.25" fy="0.25" spreadMethod="repeat">
+                        <stop offset="0%" stop-color="red"></stop>
+                        <stop offset="100%" stop-color="blue"></stop>
+                    </radialGradient>
+                    <radialGradient id="radial4" cx="0.5" cy="0.5" r="0.5" fx="0.25" fy="0.25" spreadMethod="reflect">
+                        <stop offset="0%" stop-color="red"></stop>
+                        <stop offset="100%" stop-color="blue"></stop>
+                    </radialGradient>
+                    <rect x="10" y="10" width="160" height="100" fill="url(#radial3)"></rect>
+                    <rect x="10" y="120" width="160" height="100" fill="url(#radial4)"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/radialgradient-3" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+<h2 class="title is-3" id="translate">5.1 平移-translate</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            translate(20,10) ：将图形向左平移20，向下平移10 <br>
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"0"</span> y<span class="token operator">=</span><span class="token string">"0"</span> width<span class="token operator">=</span><span class="token string">"120"</span> height<span class="token operator">=</span><span class="token string">"90"</span> transform<span class="token operator">=</span><span class="token string">"translate(20,10)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="110">
+                    <rect x="0" y="0" width="120" height="90" transform="translate(20,10)"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/translate" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="rotate">5.2 旋转-rotate</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            rotate(10) ： 旋转10度<br>
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"50"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"120"</span> height<span class="token operator">=</span><span class="token string">"50"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.1"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"50"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"120"</span> height<span class="token operator">=</span><span class="token string">"50"</span> transform<span class="token operator">=</span><span class="token string">"rotate(5)"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.2"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"50"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"120"</span> height<span class="token operator">=</span><span class="token string">"50"</span> transform<span class="token operator">=</span><span class="token string">"rotate(10)"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.4"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"50"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"120"</span> height<span class="token operator">=</span><span class="token string">"50"</span> transform<span class="token operator">=</span><span class="token string">"rotate(15)"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.8"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="190" height="120">
+                    <rect x="50" y="10" width="140" height="50" fill-opacity="0.1"></rect>
+                    <rect x="50" y="10" width="140" height="50" transform="rotate(5)" fill-opacity="0.2"></rect>
+                    <rect x="50" y="10" width="140" height="50" transform="rotate(10)" fill-opacity="0.4"></rect>
+                    <rect x="50" y="10" width="140" height="50" transform="rotate(15)" fill-opacity="0.8"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/rotate" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="skew">5.3 倾斜-skew</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            skewX(10) ： 延 X 轴倾斜10度<br>
+            skewY(10) ： 延 Y 轴倾斜10度
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"30"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"100"</span> height<span class="token operator">=</span><span class="token string">"80"</span> transform<span class="token operator">=</span><span class="token string">"skewX(5)"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.2"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"30"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"100"</span> height<span class="token operator">=</span><span class="token string">"80"</span> transform<span class="token operator">=</span><span class="token string">"skewX(10)"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.7"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"30"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"100"</span> height<span class="token operator">=</span><span class="token string">"80"</span> transform<span class="token operator">=</span><span class="token string">"skewX(15)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"30"</span> y<span class="token operator">=</span><span class="token string">"110"</span> width<span class="token operator">=</span><span class="token string">"100"</span> height<span class="token operator">=</span><span class="token string">"80"</span> transform<span class="token operator">=</span><span class="token string">"skewY(5)"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.2"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"30"</span> y<span class="token operator">=</span><span class="token string">"110"</span> width<span class="token operator">=</span><span class="token string">"100"</span> height<span class="token operator">=</span><span class="token string">"80"</span> transform<span class="token operator">=</span><span class="token string">"skewY(10)"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.7"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"30"</span> y<span class="token operator">=</span><span class="token string">"110"</span> width<span class="token operator">=</span><span class="token string">"100"</span> height<span class="token operator">=</span><span class="token string">"80"</span> transform<span class="token operator">=</span><span class="token string">"skewY(15)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="190" height="230">
+                    <rect x="30" y="10" width="100" height="80" transform="skewX(5)" fill-opacity="0.2"></rect>
+                    <rect x="30" y="10" width="100" height="80" transform="skewX(10)" fill-opacity="0.7"></rect>
+                    <rect x="30" y="10" width="100" height="80" transform="skewX(15)"></rect>
+                    <rect x="30" y="110" width="100" height="80" transform="skewY(5)" fill-opacity="0.2"></rect>
+                    <rect x="30" y="110" width="100" height="80" transform="skewY(10)" fill-opacity="0.7"></rect>
+                    <rect x="30" y="110" width="100" height="80" transform="skewY(15)"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/skew" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="scale">5.4 缩放-scale</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <blockquote>
+            scale(2) ： 缩放比例
+        </blockquote>
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"70"</span> height<span class="token operator">=</span><span class="token string">"40"</span> transform<span class="token operator">=</span><span class="token string">"scale(2)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"2"</span> cx<span class="token operator">=</span><span class="token string">"10"</span> cy<span class="token operator">=</span><span class="token string">"10"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"2"</span> cx<span class="token operator">=</span><span class="token string">"160"</span> cy<span class="token operator">=</span><span class="token string">"10"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>circle r<span class="token operator">=</span><span class="token string">"2"</span> cx<span class="token operator">=</span><span class="token string">"10"</span> cy<span class="token operator">=</span><span class="token string">"100"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="110">
+                    <rect x="10" y="10" width="70" height="40" transform="scale(2)"></rect>
+                    <circle r="2" cx="10" cy="10"></circle>
+                    <circle r="2" cx="160" cy="10"></circle>
+                    <circle r="2" cx="10" cy="100"></circle>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/scale" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<h2 class="title is-3" id="clip">6.1 剪切-clip</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>clipPath id<span class="token operator">=</span><span class="token string">"cut-off"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"0"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"170"</span> height<span class="token operator">=</span><span class="token string">"60"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>clipPath<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"120"</span> clip<span class="token operator">-</span>path<span class="token operator">=</span><span class="token string">"url(#cut-off)"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.75"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"10"</span> y<span class="token operator">=</span><span class="token string">"10"</span> width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"120"</span> fill<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0.03"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="130">
+                    <clipPath id="cut-off">
+                        <rect x="0" y="10" width="170" height="60"></rect>
+                    </clipPath>
+                    <rect x="10" y="10" width="150" height="120" clip-path="url(#cut-off)" fill-opacity="0.75"></rect>
+                    <rect x="10" y="10" width="150" height="120" fill-opacity="0.03"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/clip" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="mask">6.2 遮罩-mask</h2>
+<div class="box">
+<div class="columns">
+    <div class="column is-9">
+        <pre class=" language-js"><code class="  language-js"><span class="token operator">&lt;</span>svg<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>linearGradient id<span class="token operator">=</span><span class="token string">"lg2"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"0"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"white"</span> stop<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"0"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>stop offset<span class="token operator">=</span><span class="token string">"1"</span> stop<span class="token operator">-</span>color<span class="token operator">=</span><span class="token string">"white"</span> stop<span class="token operator">-</span>opacity<span class="token operator">=</span><span class="token string">"1"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>linearGradient<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>mask id<span class="token operator">=</span><span class="token string">"mask2"</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"0"</span> y<span class="token operator">=</span><span class="token string">"0"</span> width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"120"</span> fill<span class="token operator">=</span><span class="token string">"url(#lg2)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>mask<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>rect x<span class="token operator">=</span><span class="token string">"0"</span> y<span class="token operator">=</span><span class="token string">"0"</span> width<span class="token operator">=</span><span class="token string">"150"</span> height<span class="token operator">=</span><span class="token string">"120"</span> fill<span class="token operator">=</span><span class="token string">"red"</span> mask<span class="token operator">=</span><span class="token string">"url(#mask2)"</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">&gt;</span></code></pre>
+    </div>
+    <div class="column is-3">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">显示效果</p>
+            </header>
+            <div class="svg-container">
+                <svg width="170" height="130">
+                    <linearGradient id="lg2">
+                        <stop offset="0" stop-color="white" stop-opacity="0"></stop>
+                        <stop offset="1" stop-color="white" stop-opacity="1"></stop>
+                    </linearGradient>
+                    <mask id="mask2">
+                        <rect x="0" y="0" width="150" height="120" fill="url(#lg2)"></rect>
+                    </mask>
+                    <rect x="0" y="0" width="150" height="120" fill="red" mask="url(#mask2)"></rect>
+                </svg>
+            </div>
+            <footer class="card-footer">
+                <a href="http://30ke.cn/code/topic-svg/mask" class="card-footer-item" target="_blank">查看示例程序</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+
+<h2 class="title is-3" id="epilogue">7.1 结语</h2>
+<div class="box">
+<p>本文只包括 SVG 部分较基础的内容，可以做为一个入门的学习材料！</p>
+<p>另因时间及水平有限，在翻译及汇编过程中会有错误产生，如发现错误请不吝指正！谢谢。</p>
+</div>                </div>
+        </div>
+</body>
+
+</html>

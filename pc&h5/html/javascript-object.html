@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../style/pc.css">
+    <link rel="stylesheet" href="../../style/libs.css">
+</head>
+
+<body>
+    <h3 class="h3">JavaScript对象类型</h3>
+    <div class="column is-9">
+        <div class="content" id="content">
+            <h3 class="title is-3" id="preface">1.1 前言</h3>
+            <div class="box">
+                <p>本文简要介绍了JavaScript对象创建的七种方式，包括工厂模式、构造函数模式、原型模式、组合模式（构造函数与原型）、动态原型模式、寄生构造函数模式、稳妥构造函数模式。这几种创建方式并没有绝对的好与坏，不同的方式适合于不同的应用场景。
+                </p>
+                <p>同时流水帐记录了对象属性访问、属性判定、属性枚举、删除属性、对象序列化和反序列化等相关内容。</p>
+
+            </div>
+            <h3 class="title is-3" id="factory">2.1 工厂模式</h3>
+            <h4 class="title is-4" id="factory-create">2.1.1 工厂模式创建对象</h4>
+            <div class="box">
+                <p>工厂模式创建创建对象的代码如下：</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">createFruit</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span>colors</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> o <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    o<span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    o<span class="token punctuation">.</span>colors <span class="token operator">=</span> colors<span class="token punctuation">;</span>
+    o<span class="token punctuation">.</span><span class="token function-variable function">getInfo</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token operator">+</span><span class="token string">"是"</span><span class="token operator">+</span><span class="token keyword">this</span><span class="token punctuation">.</span>colors<span class="token operator">+</span><span class="token string">"的"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> o<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> apple <span class="token operator">=</span> <span class="token function">createFruit</span><span class="token punctuation">(</span><span class="token string">"苹果"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">"红色"</span><span class="token punctuation">,</span><span class="token string">"黄色"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="factory-intro">2.1.2 工厂模式说明</h4>
+            <div class="box">
+                <p>利用水果工厂可以很容易的创建一种新的水果，每个新创建的水果都是包括两个属性和一个方法的 <code>Object</code>。因为没有水果对象，所以不能通过
+                    <code>instanceof</code> 得出苹果是水果的结论。</p>
+
+            </div>
+            <h3 class="title is-3" id="constructor">2.2 构造函数模式</h3>
+            <h4 class="title is-4" id="constructor-create">2.2.1 构造函数模式创建对象</h4>
+            <div class="box">
+                <p>利用构造函数模式创建对象的代码如下：</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">Fruit</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span>colors</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>colors <span class="token operator">=</span> colors<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function-variable function">getInfo</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token operator">+</span><span class="token string">"是"</span><span class="token operator">+</span><span class="token keyword">this</span><span class="token punctuation">.</span>colors<span class="token operator">+</span><span class="token string">"的"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> apple <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Fruit</span><span class="token punctuation">(</span><span class="token string">"苹果"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">"红色"</span><span class="token punctuation">,</span><span class="token string">"黄色"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="constructor-intro">2.2.2 构造函数模式说明</h4>
+            <div class="box">
+                <p>利用构造函数模式可以解决对象识别问题，但其主要问题是每个方法在每个实例上重新创建一遍，没有做到方法的重用。</p>
+
+            </div>
+            <h3 class="title is-3" id="prototype">2.3 原型模式</h3>
+            <h4 class="title is-4" id="prototype-create">2.3.1 原型模式创建对象</h4>
+            <div class="box">
+                <p>利用原型模式创建对象的代码如下：</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">Fruit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+<span class="token class-name">Fruit</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">"水果"</span><span class="token punctuation">;</span>
+<span class="token class-name">Fruit</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>colors <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token class-name">Fruit</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">getInfo</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token operator">+</span><span class="token string">"是"</span><span class="token operator">+</span><span class="token keyword">this</span><span class="token punctuation">.</span>colors<span class="token operator">+</span><span class="token string">"的"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> apple <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Fruit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+apple<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">"苹果"</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="prototype-intro">2.3.2 原型模式说明</h4>
+            <div class="box">
+                <p>原型模式没办法向构造函数传递参数，原型中所有的属性是被多实例共享的，对于引用类型的共享属性的操作可能引起突出的问题。例如向苹果的颜色属性put一个"红色"（<code>apple.colors.push("红色")</code>），哪么所有水果通过原型访问到的颜色都是"红色"，而这是很危险的。
+                </p>
+
+            </div>
+            <h3 class="title is-3" id="combination">2.4 组合模式</h3>
+            <h4 class="title is-4" id="combination-create">2.4.1 组合模式创建对象</h4>
+            <div class="box">
+                <p>组合模式组合运用构造函数模式与原型与原型模式，其创建对象的代码如下：</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">Fruit</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span>colors</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>colors <span class="token operator">=</span> colors<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token class-name">Fruit</span><span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token punctuation">{</span>
+    constructor <span class="token punctuation">:</span> Fruit<span class="token punctuation">,</span>
+    <span class="token function-variable function">getInfo</span> <span class="token punctuation">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token operator">+</span><span class="token string">"是"</span><span class="token operator">+</span><span class="token keyword">this</span><span class="token punctuation">.</span>colors<span class="token operator">+</span><span class="token string">"的"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> apple <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Fruit</span><span class="token punctuation">(</span><span class="token string">"苹果"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">"红色"</span><span class="token punctuation">,</span><span class="token string">"黄色"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="combination-intro">2.4.2 组合模式说明</h4>
+            <div class="box">
+                <p>组合模式是最常见的创建自定义对象的方式，构造函数模式用于定义实例属性，原型模式用于定义方法和共享属性。可以最大限度的节省内存。</p>
+
+            </div>
+            <h3 class="title is-3" id="dynamic-prototype">2.5 动态原型模式</h3>
+            <h4 class="title is-4" id="dynamic-prototype-create">2.5.1 动态原型模式创建对象</h4>
+            <div class="box">
+                <p>动态原型模式创建对象代码如下：</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">Fruit</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span>colors</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>colors <span class="token operator">=</span> colors<span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">typeof</span>  <span class="token keyword">this</span><span class="token punctuation">.</span>getInfo <span class="token operator">!=</span> <span class="token string">"function"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">Fruit</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">getInfo</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token operator">+</span><span class="token string">"是"</span><span class="token operator">+</span><span class="token keyword">this</span><span class="token punctuation">.</span>colors<span class="token operator">+</span><span class="token string">"的"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> apple <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Fruit</span><span class="token punctuation">(</span><span class="token string">"苹果"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">"红色"</span><span class="token punctuation">,</span><span class="token string">"黄色"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="dynamic-prototype-intro">2.5.2 动态原型模式说明</h4>
+            <div class="box">
+                <p>很完美的方式，把所有信息都封装在构造函数中。只有在getInfo()方法不存在的情况下，才会将它添加到原型中。原型的这段代码只会在初次调用构造函数时才会执行。</p>
+
+            </div>
+            <h3 class="title is-3" id="parasitic-constructor">2.6 寄生构造函数模式</h3>
+            <h4 class="title is-4" id="parasitic-constructor-create">2.6.1 寄生构造函数模式创建对象</h4>
+            <div class="box">
+                <p>寄生构造函数模式创建对象代码如下：</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">Fruit</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span>colors</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> o <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    o<span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    o<span class="token punctuation">.</span>colors <span class="token operator">=</span> colors<span class="token punctuation">;</span>
+    o<span class="token punctuation">.</span><span class="token function-variable function">getInfo</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token operator">+</span><span class="token string">"是"</span><span class="token operator">+</span><span class="token keyword">this</span><span class="token punctuation">.</span>colors<span class="token operator">+</span><span class="token string">"的"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> o<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> apple <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Fruit</span><span class="token punctuation">(</span><span class="token string">"苹果"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">"红色"</span><span class="token punctuation">,</span><span class="token string">"黄色"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="parasitic-constructor-intro">2.6.2 寄生构造函数模式说明</h4>
+            <div class="box">
+                <p>这种方式和工厂模式代码其实是一样的，只是函数名采用了Fruit的首字母大写的形式，并且用new来进行初始化。这种模式可以在特殊的情况下用来为对象创建构造函数。</p>
+
+            </div>
+            <h3 class="title is-3" id="steady-constructor">2.7 稳妥构造函数模式</h3>
+            <h4 class="title is-4" id="steady-constructor-create">2.7.1 稳妥构造函数模式创建对象</h4>
+            <div class="box">
+                <p>稳妥构造函数模式创建对象的代码如下：</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">Fruit</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span>colors</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> o <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    o<span class="token punctuation">.</span><span class="token function-variable function">getInfo</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>name<span class="token operator">+</span><span class="token string">"是"</span><span class="token operator">+</span>colors<span class="token operator">+</span><span class="token string">"的"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> o<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> apple <span class="token operator">=</span> <span class="token function">Fruit</span><span class="token punctuation">(</span><span class="token string">"苹果"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">"红色"</span><span class="token punctuation">,</span><span class="token string">"黄色"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="steady-constructor-intro">2.7.2 稳妥构造函数模式说明</h4>
+            <div class="box">
+                <p>稳妥对象（durable objects）是由道格拉斯（douglas）发明。指的是没有公共属性，并且其方法也不引用this的对象。适合在安全环境中实用。</p>
+
+            </div>
+            <h3 class="title is-3" id="property-access">3.1 访问属性</h3>
+            <div class="box">
+                <p>Object对象中的第一项都被称为属性（函数被称为方法），一般来说属性值可以通过点号（.）或中括号（[]）加属性名的方式获得。属性名可以是字符串（String）也可以是数字（Number），但一般最好不要用数字做为属性名称，如果用数字做属性名称，只能采用中括号的方式访问属性。
+                </p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> ageGroup <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token string">"儿童"</span><span class="token punctuation">,</span><span class="token number">60</span><span class="token punctuation">:</span><span class="token string">"老人"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 儿童</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>ageGroup<span class="token punctuation">[</span><span class="token string">"15"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//抛出 SyntaxError </span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>ageGroup<span class="token punctuation">.</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="property-access-by-dot">3.1.1 点号（.）</h4>
+            <div class="box">
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> people <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span><span class="token string">"iFat3"</span><span class="token punctuation">,</span>sex<span class="token punctuation">:</span><span class="token string">"男"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 iFat3</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>people<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h4 class="title is-4" id="property-access-by-bracket">3.1.2 中括号（[]）</h4>
+            <div class="box">
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> people <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span><span class="token string">"iFat3"</span><span class="token punctuation">,</span>sex<span class="token punctuation">:</span><span class="token string">"男"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 iFat3</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>people<span class="token punctuation">[</span><span class="token string">"name"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="property-exists">3.2 属性存在性判定</h3>
+            <div class="box">
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> people <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span><span class="token string">"iFat3"</span><span class="token punctuation">,</span>sex<span class="token punctuation">:</span><span class="token string">"男"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"name"</span> <span class="token keyword">in</span> people<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 false</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"age"</span> <span class="token keyword">in</span> people<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 true，继承而来</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"toString"</span> <span class="token keyword">in</span> people<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="property-own">3.3 自有属性判定</h3>
+            <div class="box">
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> people <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span><span class="token string">"iFat3"</span><span class="token punctuation">,</span>sex<span class="token punctuation">:</span><span class="token string">"男"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>people<span class="token punctuation">.</span><span class="token function">hasOwnProperty</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 false，继承属性非自有属性</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>people<span class="token punctuation">.</span><span class="token function">hasOwnProperty</span><span class="token punctuation">(</span><span class="token string">"toString"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="property-enumeration">3.4 枚举属性</h3>
+            <div class="box">
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> people <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span><span class="token string">"iFat3"</span><span class="token punctuation">,</span>sex<span class="token punctuation">:</span><span class="token string">"男"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 name sex</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> item <span class="token keyword">in</span> people<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="property-delete">3.5 删除属性</h3>
+            <div class="box">
+                <p>只能删除自有属性，不能删除继承属性。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> people <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span><span class="token string">"iFat3"</span><span class="token punctuation">,</span>sex<span class="token punctuation">:</span><span class="token string">"男"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">delete</span> people<span class="token punctuation">.</span>sex<span class="token punctuation">;</span>
+<span class="token comment">//输出 undefined</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>people<span class="token punctuation">.</span>sex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">delete</span> people<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 [object Object]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>people<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="object-serialize">4.1 对象序列化</h3>
+            <div class="box">
+                <p>使用 <code>JSON.stringify</code> 函数来序列化对象。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> people <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span><span class="token string">"iFat3"</span><span class="token punctuation">,</span>sex<span class="token punctuation">:</span><span class="token string">"男"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> peopleStr <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>people<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 string</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> peopleStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 {"name":"iFat3","sex":"男"}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>peopleStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="object-deserialize">4.2 对象反序列化</h3>
+            <div class="box">
+                <p>使用<code>JSON.parse</code>函数来反序列化对象。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> people <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span><span class="token string">"iFat3"</span><span class="token punctuation">,</span>sex<span class="token punctuation">:</span><span class="token string">"男"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> peopleStr <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>people<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> people2 <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>peopleStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 object</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> people2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//输出 iFat3</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>people2<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

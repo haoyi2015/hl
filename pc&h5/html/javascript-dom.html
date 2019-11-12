@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../style/pc.css">
+    <link rel="stylesheet" href="../../style/libs.css">
+</head>
+
+<body>
+    <h3 class="h3">JavaScript DOM操作</h3>
+    <div class="column is-9">
+        <div class="content" id="content">
+            <h3 class="title is-3" id="preface">1.1 前言</h3>
+            <div class="box">
+                <p>本文中简要罗列了JavaScript操作Dom的基本方法，其中包括元素查询、文档结构遍历、属性及内容操作、创建节点、插入节点及删除节点等内容。虽然JQuery更便利，但我还是喜欢用原生的API。</p>
+
+            </div>
+            <h3 class="title is-3" id="by-id">2.1 ID选择器</h3>
+            <div class="box">
+                <p>通过ID选取元素是最简单和常用的选取元素的方法，ID选择器性能优于其它选择器。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> title <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"title"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+                <p>ID不存在，返回 <code>null</code> 。</p>
+
+                <div><a class="button is-link" href="/code/js-dom/by-id" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="by-name">2.2 名称选择器</h3>
+            <div class="box">
+                <p>基于name属性的值选取元素区别于ID选择器。其一，name属性值
+                    不是必须唯一，多个元素可能有同样的名称；其二，name属性只在少数HTML元素中有效，包括表单、表单元素、<code>iframe</code> 及 <code>img</code> 元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> sports <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementsByName</span><span class="token punctuation">(</span><span class="token string">"sports"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/by-name" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="by-tag">2.3 标签选择器</h3>
+            <div class="box">
+                <p>利用HTML元素的标签名称选取指定类型的元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> h1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementsByTagName</span><span class="token punctuation">(</span><span class="token string">"h1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/by-tag" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="by-class">2.4 类选择器</h3>
+            <div class="box">
+                <p>通过HTML的 class 属性值选择元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> title <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementsByClassName</span><span class="token punctuation">(</span><span class="token string">"title"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/by-class" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="by-css">2.5 CSS单元素选择器</h3>
+            <div class="box">
+                <p>通过CSS样式表选择器的强大语法，来选择元素。返回第一个匹配的元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> title <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"#title"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// CSS ID选择</span>
+    <span class="token keyword">var</span> h1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"h1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">//选取第一个h1元素</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/by-css" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="by-css-2">2.6 CSS多元素选择器</h3>
+            <div class="box">
+                <p>这是最强大的终极选择器</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> h1s <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">"h1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//返回所有h1标签元素</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/by-css-2" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="node">3.1 节点相关</h3>
+            <h4 class="title is-4" id="parentNode">3.1.1 父节点-parentNode</h4>
+            <div class="box">
+                <p>返回父节点，如果 <code>document</code> 对象调用则返回 <code>null</code>。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> parent <span class="token operator">=</span> node<span class="token punctuation">.</span>parentNode<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/parentNode" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="childNodes">3.1.2 子节点-childNodes</h4>
+            <div class="box">
+                <p>返回所有子节点，即NodeList对象。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> children <span class="token operator">=</span> node<span class="token punctuation">.</span>childNodes<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/childNodes" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="firstChild">3.1.3 首子节点-firstChild</h4>
+            <div class="box">
+                <p>返回第一个子节点。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> first <span class="token operator">=</span> node<span class="token punctuation">.</span>firstChild<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/firstChild" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="lastChild">3.1.4 尾子节点-lastChild</h4>
+            <div class="box">
+                <p>返回最后一个子节点。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> last <span class="token operator">=</span> node<span class="token punctuation">.</span>lastChild<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/lastChild" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="nextSibling">3.1.5 下一兄弟节点-nextSibling</h4>
+            <div class="box">
+                <p>返回下一个兄弟节点。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> next <span class="token operator">=</span> node<span class="token punctuation">.</span>nextSibling<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/nextSibling" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="previousSibling">3.1.6 前一兄弟节点-previousSibling</h4>
+            <div class="box">
+                <p>返回前一个兄弟节点。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> previous <span class="token operator">=</span> node<span class="token punctuation">.</span>previousSibling<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/previousSibling" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="nodeType">3.1.7 节点类型-nodeType</h4>
+            <div class="box">
+                <p>返回节点类型的数字表示。</p>
+                <ul>
+                    <li>1代表 <code>Element</code> 节点</li>
+                    <li>3代表 <code>Text</code> 节点</li>
+                    <li>8代表 <code>Comment</code> 节点</li>
+                    <li>9代表 <code>Document</code> 节点</li>
+                    <li>11代表 <code>DocumentFragment</code> 节点</li>
+                </ul>
+
+                <div><a class="button is-link" href="/code/js-dom/nodeType" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="nodeValue">3.1.8 节点值-nodeValue</h4>
+            <div class="box">
+                <p>返回 <code>Text</code> 节点 或 <code>Comment</code> 节点的值。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> value <span class="token operator">=</span> node<span class="token punctuation">.</span>nodeValue<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/nodeValue" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="nodeName">3.1.9 节点名-nodeName</h4>
+            <div class="box">
+                <p>返回元素的标签名，以大写形式表示。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> name <span class="token operator">=</span> node<span class="token punctuation">.</span>nodeName<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/nodeName" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="element">3.2 元素相关</h3>
+            <h4 class="title is-4" id="children">3.2.1 子元素-children</h4>
+            <div class="box">
+                <p>返回所有子元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> children <span class="token operator">=</span> node<span class="token punctuation">.</span>children<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/children" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="firstElementChild">3.2.2 首子元素-firstElementChild</h4>
+            <div class="box">
+                <blockquote>
+                    <p>元素是节点的一种。</p>
+                </blockquote>
+                <p>返回所有子元素中的第一个。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> first <span class="token operator">=</span> node<span class="token punctuation">.</span>firstElementChild<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/firstElementChild" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="lastElementChild">3.2.3 尾子元素-lastElementChild</h4>
+            <div class="box">
+                <p>返回所有子元素中的最后一个。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> last<span class="token operator">=</span> node<span class="token punctuation">.</span>lastElementChild<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/lastElementChild" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="nextElementSibling">3.2.4 下一兄弟元素-nextElementSibling</h4>
+            <div class="box">
+                <p>返回下一个兄弟元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> next <span class="token operator">=</span> node<span class="token punctuation">.</span>nextElementSibling<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/nextElementSibling" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="previousElementSibling">3.2.5 前一兄弟元素-previousElementSibling</h4>
+            <div class="box">
+                <p>返回前一兄弟元素。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> previous <span class="token operator">=</span> node<span class="token punctuation">.</span>previousElementSibling<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/previousElementSibling" target="_blank">查看示例程序</a>
+                </div>
+            </div>
+            <h4 class="title is-4" id="childElementCount">3.2.6 子元素数量</h4>
+            <div class="box">
+                <p>返回子元素的数量。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> count <span class="token operator">=</span> node<span class="token punctuation">.</span>childElementCount<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/childElementCount" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="attribute-standard">4.1 标准属性</h3>
+            <div class="box">
+                <p>表示HTML文档元素的 <code>HTMLElement</code> 对象定义了读/写属性，它们对应于元素的HTML属性。<code>HTMLElement</code>
+                    定义了通用的HTML属性，包括id、lang、dir、事件处理程序 <code>onclick</code> 及表单相关属性等。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">form<span class="token punctuation">.</span>action <span class="token operator">=</span> <span class="token string">"http://30ke.cn"</span><span class="token punctuation">;</span>
+    form<span class="token punctuation">.</span>method <span class="token operator">=</span> <span class="token string">"post"</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/attribute-standard" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="attribute-nonstandard">4.2 非标准属性</h3>
+            <h4 class="title is-4" id="getAttribute">4.2.1 获取属性值-getAttribute</h4>
+            <div class="box">
+                <p>返回非标准的HTML属性的值。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> width <span class="token operator">=</span> img<span class="token punctuation">.</span><span class="token function">getAttribute</span><span class="token punctuation">(</span><span class="token string">"width"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/getAttribute" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="setAttribute">4.2.2 属性值设置-setAttribute</h4>
+            <div class="box">
+                <p>设置非标准的HTML属性的值。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">img<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">"width"</span><span class="token punctuation">,</span><span class="token string">"400px"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/setAttribute" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="hasAttribute">4.2.3 属性存在检测-hasAttribute</h4>
+            <div class="box">
+                <p>返回布尔值，用来检测属性是否存在。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> result <span class="token operator">=</span> img<span class="token punctuation">.</span><span class="token function">hasAttribute</span><span class="token punctuation">(</span><span class="token string">"width"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/hasAttribute" target="_blank">查看示例程序</a></div>
+            </div>
+            <h4 class="title is-4" id="removeAttribute">4.2.4 删除属性-removeAttribute</h4>
+            <div class="box">
+                <p>删除某一属性。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">img<span class="token punctuation">.</span><span class="token function">removeAttribute</span><span class="token punctuation">(</span><span class="token string">"width"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/removeAttribute" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="dataset">4.3 数据集属性-dataset</h3>
+            <div class="box">
+                <p>在HTML5文档中，任意以 <code>data-</code> 为前缀的小写的属性名字都是合法的。这些 “数据集属性” 定义了一种标准的、附加额外数据的方法。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> x <span class="token operator">=</span> img<span class="token punctuation">.</span>dataset<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/dataset" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="attributes">4.4 元素属性-attributes</h3>
+            <div class="box">
+                <p>Node节点定义了 <code>attributes</code> 属性，针对 Element 对象，<code>attributes</code> 是元素所有属性的类数组对象。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> attributes <span class="token operator">=</span> img<span class="token punctuation">.</span>attributes<span class="token punctuation">;</span>
+    </code></pre>
+                <p>索引 <code>attributes</code> 对象得到的值是 Attr 对象。Attr 的 name 和 value 返回该属性的名字和值。</p>
+
+                <div><a class="button is-link" href="/code/js-dom/attributes" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="innerHTML">5.1 元素内容-innerHTML</h3>
+            <div class="box">
+                <p><code>innerHTML</code> 属性以字符串形式返回这个元素的内容。也可以用来替换元素当前内容。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> innerHTML <span class="token operator">=</span> parent<span class="token punctuation">.</span>innerHTML<span class="token punctuation">;</span>     <span class="token comment">// 获取节点的内容</span>
+    parent<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token string">"&lt;h1&gt;三十课&lt;/h1&gt;"</span><span class="token punctuation">;</span>  <span class="token comment">//替换节点的内容</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/innerHTML" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="outerHTML">5.2 元素及内容-outerHTML</h3>
+            <div class="box">
+                <p><code>outerHTML</code> 属性以字符串形式返回这个元素及内容。也可以用来替换当前元素及内容。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> outerHTML <span class="token operator">=</span> parent<span class="token punctuation">.</span>outerHTML<span class="token punctuation">;</span>     <span class="token comment">// 获取节点及内容</span>
+    parent<span class="token punctuation">.</span>outerHTML<span class="token operator">=</span> <span class="token string">"&lt;h1&gt;三十课&lt;/h1&gt;"</span><span class="token punctuation">;</span>  <span class="token comment">//替换节点及其内容</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/outerHTML" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="textContent">5.3 纯文本元素内容-textContent</h3>
+            <div class="box">
+                <p>查询或替换纯文本元素内容的标准方法是用Node的textContent属性来实现。在IE中，可以用 Element 的 <code>innerText</code> 属性来代替。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>title<span class="token punctuation">.</span>textContent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    title<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">"三十课2"</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/textContent" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="createElement">6.1 创建元素节点-createElement</h3>
+            <div class="box">
+                <p>使用 document 对象的 <code>createElement()</code> 方法创建新的 Element节点。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> h1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"h1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/createElement" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="createTextNode">6.2 创建文本节点-createTextNode</h3>
+            <div class="box">
+                <p>创建纯文本节点。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> txt <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createTextNode</span><span class="token punctuation">(</span><span class="token string">"三十课"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/createTextNode" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="createDocumentFragment">6.3 创建文档片段-createDocumentFragment</h3>
+            <div class="box">
+                <p>使用文档片段通常会带来更好的性能。因为文档片段存在于内存中，并不在DOM树中，所以将子元素插入到文档片段时不会引起页面回流（对元素位置和几何上的计算）。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> fragment <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createDocumentFragment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/createDocumentFragment" target="_blank">查看示例程序</a>
+                </div>
+            </div>
+            <h3 class="title is-3" id="createComment">6.4 创建注释节点-createComment</h3>
+            <div class="box">
+                <p>创建注释节点不经常使用。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> comment <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createComment</span><span class="token punctuation">(</span><span class="token string">"Created by 毛瑞"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/createComment" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="cloneNode">6.5 节点克隆-cloneNode</h3>
+            <div class="box">
+                <p>通过复制已存在的节点来创建新的文档节点。传参数 true 表示深克隆，false表示浅复制。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> title2 <span class="token operator">=</span> title<span class="token punctuation">.</span><span class="token function">cloneNode</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/cloneNode" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="appendChild">7.1 插入子节点-appendChild</h3>
+            <div class="box">
+                <p>在指定元素上插入子节点，并使其成为该节点的最后一个子节点。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">parent<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>h2<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/appendChild" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="insertBefore">7.2 节点前插入-insertBefore</h3>
+            <div class="box">
+                <ul>
+                    <li>在父节点上调用本方法</li>
+                    <li>第一参数表示待插入的节点</li>
+                    <li>第二参数是父节点中已经存在的子节点，新节点插入到该节点的前面</li>
+                </ul>
+                <pre class=" language-javascript"><code class=" language-javascript">parent<span class="token punctuation">.</span><span class="token function">insertBefore</span><span class="token punctuation">(</span>h1<span class="token punctuation">,</span>h2<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// h1插入到h2之前。</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/insertBefore" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="removeChild">8.1 删除子节点-removeChild</h3>
+            <div class="box">
+                <ul>
+                    <li>在父节点上调用</li>
+                    <li>参数是待删除的节点</li>
+                </ul>
+                <pre class=" language-javascript"><code class=" language-javascript">parent<span class="token punctuation">.</span><span class="token function">removeChild</span><span class="token punctuation">(</span>h2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/removeChild" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="replaceChild">8.2 替换子节点-replaceChild</h3>
+            <div class="box">
+                <ul>
+                    <li>在父节点上调用</li>
+                    <li>第一个参数是新节点</li>
+                    <li>第二个参数是需要替换的节点</li>
+                </ul>
+                <pre class=" language-javascript"><code class=" language-javascript">parent<span class="token punctuation">.</span><span class="token function">replaceChild</span><span class="token punctuation">(</span>h2n <span class="token punctuation">,</span> h2<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    </code></pre>
+
+                <div><a class="button is-link" href="/code/js-dom/replaceChild" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="epilogue">9.1 结语</h3>
+            <div class="box">
+                <p>本人知识水平有限，在汇编的过程中时有错误发生，如发现请不吝指正！多谢。</p>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

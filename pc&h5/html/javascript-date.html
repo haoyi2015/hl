@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../style/pc.css">
+    <link rel="stylesheet" href="../../style/libs.css">
+</head>
+
+<body>
+    <h3 class="h3">JavaScript Date API</h3>
+    <div class="column is-9">
+        <div class="content" id="content">
+            <h3 class="title is-3" id="preface">1.1 前言</h3>
+            <div class="box">
+                <p>在平时开发过程中，总是记不住日期（Date）相关的方法和属性，因此特别整理了本文内容。做为一个备忘和速查手册，大家赶快收藏吧！</p>
+
+            </div>
+            <h3 class="title is-3" id="default-init">2.1 缺省创建</h3>
+            <div class="box">
+                <p>最常用的日期对象创建方式，返回当前时间的日期对象。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/default-init" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="milliseconds-init">2.2 按毫秒创建</h3>
+            <div class="box">
+                <p>按毫秒为参数创建固定的日期对象，0毫秒表示日期起点，即1970年1月1日。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>milliseconds<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/milliseconds-init" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="dateString-init">2.3 按字符串创建</h3>
+            <div class="box">
+                <p>按日期字符串为参数创建日期对象。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>dateString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/dateString-init" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="parameters-init">2.4 多参数创建</h3>
+            <div class="box">
+                <p>按年、月、日、时、分、秒、毫秒为参数创建日期对象。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> hours<span class="token punctuation">,</span> minutes<span class="token punctuation">,</span> seconds<span class="token punctuation">,</span> milliseconds<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/parameters-init" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getFullYear">3.1 获取年份-getFullYear</h3>
+            <div class="box">
+                <p>返回一个表示年份的 4 位数字。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> year <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getFullYear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getFullYear" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getMonth">3.2 获取月份-getMonth</h3>
+            <div class="box">
+                <p>返回月份 (0 ~ 11)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> month <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getMonth" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getDate">3.3 获取天数-getDate</h3>
+            <div class="box">
+                <p>返回一个月中的某一天 (1 ~ 31)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> dt <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getDate" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getDay">3.4 获取星期几-getDay</h3>
+            <div class="box">
+                <p>返回一周中的某一天 (0 ~ 6)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> day <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getDay" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getHours">3.5 获取小时-getHours</h3>
+            <div class="box">
+                <p>返回小时数 (0 ~ 23)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> hour <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getHours</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getHours" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getMinutes">3.6 获取分钟-getMinutes</h3>
+            <div class="box">
+                <p>返回分钟数 (0 ~ 59)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> minute <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getMinutes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getMinutes" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getSeconds">3.7 获取秒-getSeconds</h3>
+            <div class="box">
+                <p>返回秒数 (0 ~ 59)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> second <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getSeconds" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getMilliseconds">3.8 获取毫秒-getMilliseconds</h3>
+            <div class="box">
+                <p>返回毫秒数(0 ~ 999)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> millisecond <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getMilliseconds" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getTime">3.9 获取时间-getTime</h3>
+            <div class="box">
+                <p>返回与 1970 年 1 月 1 日之间的毫秒数。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> ms <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/getTime" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="setFullYear">4.1 设置年份-setFullYear</h3>
+            <div class="box">
+                <p>设置 Date 对象中的年份（四位数字）。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setFullYear</span><span class="token punctuation">(</span><span class="token number">2018</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/setFullYear" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="setMonth">4.2 设置月份-setMonth</h3>
+            <div class="box">
+                <p>设置月份 (0 ~ 11)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setMonth</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/setMonth" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="setDate">4.3 设置天数-setDate</h3>
+            <div class="box">
+                <p>设置 Date 对象的日期为月中的某一天 (1 ~ 31)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setDate</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/setDate" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="setHours">4.4 设置小时数-setHours</h3>
+            <div class="box">
+                <p>设置 Date 对象中的小时数 (0 ~ 23)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setHours</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/setHours" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="setMinutes">4.5 设置分钟-setMinutes</h3>
+            <div class="box">
+                <p>设置 Date 对象中的分钟数 (0 ~ 59)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setMinutes</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/setMinutes" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="setSeconds">4.6 设置秒数-setSeconds</h3>
+            <div class="box">
+                <p>设置 Date 对象中的秒数 (0 ~ 59)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setSeconds</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/setSeconds" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="setMilliseconds">4.7 设置毫秒数-setMilliseconds</h3>
+            <div class="box">
+                <p>设置 Date 对象中的毫秒数 (0 ~ 999)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setMilliseconds</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="setTime">4.8 设置时间-setTime</h3>
+            <div class="box">
+                <p>以毫秒数设置 Date 对象。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setTime</span><span class="token punctuation">(</span><span class="token number">24</span><span class="token operator">*</span><span class="token number">60</span><span class="token operator">*</span><span class="token number">60</span><span class="token operator">*</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/setTime" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="getUTCFullYear">5.1 获取年份-getUTCFullYear</h3>
+            <div class="box">
+                <p>根据世界时返回四位数的年份。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> year <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getUTCFullYear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="getUTCMonth">5.2 获取月份-getUTCMonth</h3>
+            <div class="box">
+                <p>根据世界时返回月份数 (0 ~ 11)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> month<span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getUTCMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="getUTCDate">5.3 获取天数-getUTCDate</h3>
+            <div class="box">
+                <p>根据世界时返回月中的一天 (1 ~ 31)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> d <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getUTCDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="getUTCDay">5.4 获取星期几-getUTCDay</h3>
+            <div class="box">
+                <p>根据世界时返回周中的一天 (0 ~ 6)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> day<span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getUTCDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="getUTCHours">5.5 获取小时数-getUTCHours</h3>
+            <div class="box">
+                <p>根据世界时返回小时数 (0 ~ 23)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> hour<span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getUTCHours</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="getUTCMinutes">5.6 获取分钟数-getUTCMinutes</h3>
+            <div class="box">
+                <p>据世界时返回分钟数 (0 ~ 59)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> minute<span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getUTCMinutes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="getUTCSeconds">5.7 获取秒数-getUTCSeconds</h3>
+            <div class="box">
+                <p>根据世界时返回秒数 (0 ~ 59)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> second <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getUTCSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="getUTCMilliseconds">5.8 获取毫秒数-getUTCMilliseconds</h3>
+            <div class="box">
+                <p>根据世界时返回毫秒数 (0 ~ 999)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> millisecond <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getUTCMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="setUTCFullYear">6.1 设置年份-setUTCFullYear</h3>
+            <div class="box">
+                <p>根据世界时设置年份（四位数字）。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setUTCFullYear</span><span class="token punctuation">(</span><span class="token number">2019</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="setUTCMonth">6.2 设置月份-setUTCMonth</h3>
+            <div class="box">
+                <p>根据世界时设置月份数 (0 ~ 11)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setUTCMonth</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="setUTCDate">6.3 设置天数-setUTCDate</h3>
+            <div class="box">
+                <p>根据世界时设置月中的一天 (1 ~ 31)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setUTCDate</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="setUTCHours">6.4 设置小时数-setUTCHours</h3>
+            <div class="box">
+                <p>根据世界时设置小时数 (0 ~ 23)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setUTCHours</span><span class="token punctuation">(</span><span class="token number">22</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="setUTCMinutes">6.5 设置分钟-setUTCMinutes</h3>
+            <div class="box">
+                <p>根据世界时设置分钟数 (0 ~ 59)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setUTCMinutes</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="setUTCSeconds">6.6 设置秒数-setUTCSeconds</h3>
+            <div class="box">
+                <p>根据世界时设置秒数。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setUTCSeconds</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="setUTCMilliseconds">6.7 设置毫秒-setUTCMilliseconds</h3>
+            <div class="box">
+                <p>根据世界时设置毫秒数 (0 ~ 999)。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">setUTCMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+            <h3 class="title is-3" id="toString">7.1 转成字符串-toString</h3>
+            <div class="box">
+                <p>把 Date 对象转换为字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toString" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="toISOString">7.2 ISO字符串-toISOString</h3>
+            <div class="box">
+                <p>返回 ISO 格式的日期字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toISOString" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="toUTCString">7.3 世界时字符串-toUTCString</h3>
+            <div class="box">
+                <p>根据世界时，返回日期字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">toUTCString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toUTCString" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="toDateString">7.4 日期部分字符串-toDateString</h3>
+            <div class="box">
+                <p>返回日期部分的字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">toDateString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toDateString" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="toTimeString">7.5 时间字符串-toTimeString</h3>
+            <div class="box">
+                <p>返回时间部分的字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">toTimeString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toTimeString" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="toLocaleString">7.6 本地格式字符串-toLocaleString</h3>
+            <div class="box">
+                <p>返回本地时间格式的字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toLocaleString" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="toLocaleDateString">7.7 本地日期字符串-toLocaleDateString</h3>
+            <div class="box">
+                <p>返回本地时间格式的日期部分字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">toLocaleDateString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toLocaleDateString" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="toLocaleTimeString">7.8 本地时间字符串-toLocaleTimeString</h3>
+            <div class="box">
+                <p>返回本地时间格式的时间部分字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">toLocaleTimeString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toLocaleTimeString" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="parse">8.1 时间字符串解析-parse</h3>
+            <div class="box">
+                <p>返回1970年1月1日和字符串所表示时间相差的毫秒数。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> millisecond<span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token string">"2019-05-06"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/parse" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="toJSON">8.2 JSON格式-toJSON</h3>
+            <div class="box">
+                <p>返回 JSON 格式的日期字符串。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> json<span class="token operator">=</span>date<span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/toJSON" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="UTC">8.3 世界时间-UTC</h3>
+            <div class="box">
+                <p>根据世界时返回 1970 年 1 月 1 日 到指定日期的毫秒数。</p>
+                <pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> millisecond <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token constant">UTC</span><span class="token punctuation">(</span><span class="token number">2019</span><span class="token punctuation">,</span><span class="token number">05</span><span class="token punctuation">,</span><span class="token number">06</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/UTC" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="valueOf">8.4 原始值-valueOf</h3>
+            <div class="box">
+                <p>返回 Date 对象的原始值。</p>
+                <pre class=" language-javascript"><code class=" language-javascript">date<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                <div><a class="button is-link" href="/code/js-date/valueOf" target="_blank">查看示例程序</a></div>
+            </div>
+            <h3 class="title is-3" id="epilogue">9.1 结语</h3>
+            <div class="box">
+                <p>本人知识水平有限，在汇编的过程中时有错误发生，如发现错误请不吝指正！多谢。</p>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
