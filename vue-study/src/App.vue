@@ -9,12 +9,19 @@
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
+.code-content-warp{
+  max-width: 1080px;
+  margin: 0 auto;
+}
 .h1-font{
     font-size: 20px;
+    padding: 10px 0;
+}
+.h2-title-name{
+  font-size: 20px;
     padding: 10px 0;
 }
 .code-content{

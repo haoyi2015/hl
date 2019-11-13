@@ -1,5 +1,5 @@
 const vueRender = r => require.ensure([], () => r(require('@/pages/vueRender.vue')), 'vueRender')
-const vueExtend = r => require.ensure([], () => r(require('@/pages/vueExtend.vue')), 'vueExtend')
+const vueDemo = r => require.ensure([], () => r(require('@/pages/vueDemo.vue')), 'vueDemo')
 export default [
     {
         path: '/vue-render',
@@ -11,9 +11,9 @@ export default [
         }
     },
     {
-        path: '/vue-extend',
-        name: 'vueExtend',
-        component: vueExtend,
+        path: '/vue-demo',
+        name: 'vueDemo',
+        component: vueDemo,
         meta: {
             title: 'Vue.extend',
             keepAlive: true
