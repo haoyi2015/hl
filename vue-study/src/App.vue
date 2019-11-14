@@ -1,10 +1,31 @@
 <template>
   <div id="app">
-    <router-view />
+    <div class="vue-warp-flex">
+      <div class="left-mune">111111</div>
+      <div class="vue-warp-flex__item">
+        <div class="code-content-warp">
+          <router-view />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
+.vue-warp-flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+.vue-warp-flex__item {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+.left-mune{
+  width: 200px;
+  background: #fff;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -13,8 +34,9 @@
   margin-top: 60px;
 }
 .code-content-warp{
-  max-width: 1080px;
-  margin: 0 auto;
+  // max-width: 1080px;
+  // margin: 0 auto;
+  padding-bottom: 50px;
 }
 .h1-font{
     font-size: 20px;

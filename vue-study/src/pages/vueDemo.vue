@@ -1,5 +1,5 @@
 <template>
-    <section class="code-content-warp">
+    <section>
         <div v-change-color="color">{{color}}</div>
         <input type="text" @keyup.f2="add"/><br />
         有些 template 中的静态 dom 没有改变,这时就只需要渲染一次,可以降低性能开销<br />
