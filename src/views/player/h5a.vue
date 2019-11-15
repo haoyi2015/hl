@@ -1,0 +1,7430 @@
+<template>
+<article class="player-warp">
+    <div id="loadingToast" v-if="loading">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content">数据加载中</p>
+        </div>
+    </div>
+    <section class="player-warps">
+        <!--全屏播放器-->
+        <transition name="normal">
+            <div class="normal-player" @touchstart.once="firstPlay" v-show="currentShow=='normal'&&!qpFlag">
+                <div class="background">
+                    <transition name="filterR">
+                  <div class="filterR" v-show="currentShow === 'lyric'"></div>
+                  </transition>
+                    <div class="filter"></div>
+                    <img src="http://p1.music.126.net/4HTyupyD-UOMJQICmscT8w==/109951163020513888.jpg" width="100%" height="100%">
+                </div>
+                <div class="top">
+                    <div class="back" @click="back">
+                        <i class="iconfont icon-angle-down"></i>
+                    </div>
+                    <h1 class="title">歌手</h1>
+                    <h2 class="subtitle">歌名</h2>
+                </div>
+                <div class="middle" @click="changeMiddle">
+                    <transition name="middleL">
+                        <div class="middle-l">
+                            <div class="cd-wrapper">
+                                <div class="cd" :class="play ? 'play' : 'pause'">
+                                    <img src="http://p1.music.126.net/4HTyupyD-UOMJQICmscT8w==/109951163020513888.jpg" class="image">
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                    <transition name="middleR">
+                        <scroll class="middle-r" ref="lyricList">
+                            <div class="lyric-wrapper">
+                                <div class="currentLyric">
+                                    <p ref="lyricLine" class="text">
+                                        11
+                                    </p>
+                                </div>
+                                <p class="no-lyric">没歌词</p>
+                            </div>
+                        </scroll>
+                    </transition>
+                </div>
+                <div class="bottom">
+                    <div class="progress-wrapper">
+                        <span class="time time-l">{{format(currentTime)}}</span>
+                        <div class="progress-bar-wrapper">
+                            <progress-bar :percent="percent" @percentChangeEnd="percentChangeEnd" @percentChange="percentChange"></progress-bar>
+                        </div>
+                        <span class="time time-r">{{format(currentTimeMaxTime)}}</span>
+                    </div>
+                    <div class="operators">
+                        <div class="icon i-left" >
+                          <i class="iconfont icon-mode" @click="changeMode"></i>
+                        </div>
+                        <div class="icon i-left">
+                            <i class="iconfont icon-shangyishou" @click="prev"></i>
+                        </div>
+                        <div class="icon i-center" @click="audioState">
+                            <i class="iconfont" :class="play ? ' icon-zanting' : ' icon-bofang'"></i>
+                        </div>
+                        <div class="icon i-right">
+                            <i class="iconfont icon-xiayishou" @click="next"></i>
+                        </div>
+                        <div class="icon i-right">
+                            <i class="iconfont icon-dislike" @click="toggleFavorite(playlist)" :class="getFavoriteIcon(playlist)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!--最小化播放器-->
+        <transition name="mini">
+            <div class="mini-player" v-show="currentShow=='mini'&&!qpFlag">
+                <div class="icon" @click="open">
+                    <img :class="play ? 'play' : 'pause'" src="http://p1.music.126.net/4HTyupyD-UOMJQICmscT8w==/109951163020513888.jpg" width="40" height="40">
+                </div>
+                <div class="text">
+                    <h2 class="name">歌名</h2>
+                    <div class="desc">歌词</div>
+                </div>
+                <div class="control" @click.stop="audioState">
+                    <i :class="play ? 'iconfont icon-zanting' : 'iconfont icon-bofang'"></i>
+                </div>
+                <div class="control" @click.stop="showPlaylist">
+                    <i class="iconfont icon-right-mune"></i>
+                </div>
+            </div>
+        </transition>
+        <!--歌单-->
+        <transition name="slide" mode="out-in">
+          <div class="music-list" v-show="currentShow=='slide'&&qpFlag">
+            <div class="header" ref="header">
+              <div class="back" @click="goBack">
+                <i class="iconfont icon-fanhui" style="padding: 5px 10px;
+            font-size: 22px;
+            font-weight: bold;
+            position: relative;
+            top: 4px;"></i>
+              </div>
+              <div class="text">
+                <h1 class="title" style="font-size:16px">{{headerTitle}}</h1>
+              </div>
+            </div>
+            <scroll class="list"
+            @scroll="scroll"
+            :probe-type="3"
+            :listen-scroll="true"
+            :data="listDetail"
+            ref="list">
+              <div class="music-list-wrapper">
+                <div class="bg-image" :style="bgStyle" ref="bgImage">
+                  <div class="filter"></div>
+                  <div class="text">
+                    <h2 class="list-title">100句情话我只唱给你听</h2>
+                    <p class="play-count" v-if="playCount">
+                      <i class="fa fa-headphones"></i>
+                      {{playCount}}
+                    </p>
+                  </div>
+                </div>
+                <div class="song-list-wrapper">
+                  <div class="sequence-play" v-show="listDetail.length">
+                    <i class="iconfont icon-bofang"></i>
+                    <span class="text">播放全部</span>
+                    <span class="count">(共{{listDetail.length}}首)</span>
+                  </div>
+                  <song-list @select="selectItem" :songs="listDetail"></song-list>
+                </div>
+              </div>
+            </scroll>
+            <div v-show="!listDetail.length" class="loading-content"></div>
+          </div>
+        </transition>
+    </section>
+    <!--播放器主体-->
+    <section class="audio-warp max-player" v-if="false">
+        <!-- 这里是圆形进度条 -->
+        <div class="circleProgress_wrapper">
+            <img :class="play ? 'run':''" src="../../assets/132996159.jpg" alt="">
+        </div>
+        <div class="bar">
+            <div class="progressbar" @click="playMusic" ref="runfatbar">
+                <div class="greenbar" ref="runbar">
+                    <span class="yuan" draggable="true"></span>
+                </div>
+            </div>
+        </div>
+        <!-- {{cTime}}  {{dTime}}-->
+        <div class="time-text">{{ currentTime | formatSecond }}</div>
+        <div class="right-time time-text">{{ currentTimeMaxTime | formatSecond }}</div>
+        <div class="audio-btn">
+            <i class="iconfont icon-shangyishou" @click="switchAudio('top')"></i>
+            <i :class="play ? 'iconfont icon-zanting' : 'iconfont icon-bofang'" @click="audioState"></i>
+            <i class="iconfont icon-xiayishou" @click="switchAudio('bottom')"></i>
+        </div>
+    </section>
+    <div>
+        <audio ref="player" :src="audioHttp" @ended="onEnded" @error="onError" @loadedmetadata="onLoadedmetadata" @timeupdate="onTimeupdate"></audio>
+    </div>
+</article>
+</template>
+<script>
+const realFormatSecond = ((second) => {
+    let secondType = typeof second
+    if (secondType === 'number' || secondType === 'string') {
+        second = parseInt(second)
+        let hours = Math.floor(second / 3600)
+        second = second - hours * 3600
+        let mimute = Math.floor(second / 60)
+        second = second - mimute * 60
+        return hours + ':' + ('0' + mimute).slice(-2) + ':' + ('0' + second).slice(-2)
+    } else {
+        return '0:00:00'
+    }
+})
+import ProgressBar from '@/components/vueMusic/progress-bar'
+import Scroll from '@/components/vueMusic/scroll'
+import SongList from '@/components/vueMusic/songList'
+import {createRecommendListSong} from '@/assets/js/song'
+const RESERVED_HEIGHT = 44
+export default {
+    name: 'music-view',
+    components: {},
+    props: {
+        type: '',
+    },
+    data() {
+        return {
+            currentTimeMaxTime: '',
+            currentTime: '',
+            loading: true,
+            cTime: '00:00', // 已播放时间
+            dTime: '00:00', // 总播放时间
+            play: false, // 播放暂停按钮
+            audioHttp: 'http://up.mcyt.net/?down/46426.mp3', // 音频链接
+            miniFlag: true,
+            percent: 0,
+            duration: 0,
+            playlist: '', //歌列表
+            currentShow: 'slide',
+            headerTitle: '歌单',
+            listDetail: [],
+            scrollY:0,
+            qpFlag:true
+        }
+    },
+    created(){
+        //获取详细列表
+        let details = {
+              "result":{
+                  "subscribers":[
+
+                  ],
+                  "subscribed":false,
+                  "creator":{
+                      "defaultAvatar":false,
+                      "province":110000,
+                      "authStatus":0,
+                      "followed":false,
+                      "avatarUrl":"http://p1.music.126.net/oRs5vm4uXYS0cZpYu-6D6w==/109951163391590128.jpg",
+                      "accountStatus":0,
+                      "gender":1,
+                      "city":110101,
+                      "birthday":794073600000,
+                      "userId":43096902,
+                      "userType":0,
+                      "nickname":"溺水的船长",
+                      "signature":"能做事便做事，能发声便发声。纵有一分热，也发一分光。此后如竟没有炬火，我便是唯一的光。",
+                      "description":"",
+                      "detailDescription":"",
+                      "avatarImgId":109951163391590128,
+                      "backgroundImgId":109951163392004592,
+                      "backgroundUrl":"http://p1.music.126.net/VgkZSxPDCcMuOOIYu5YiNQ==/109951163392004592.jpg",
+                      "authority":0,
+                      "mutual":false,
+                      "expertTags":null,
+                      "experts":null,
+                      "djStatus":0,
+                      "vipType":11,
+                      "remarkName":null,
+                      "avatarImgIdStr":109951163391590128,
+                      "backgroundImgIdStr":109951163392004592,
+                      "avatarImgId_str":109951163391590128
+                  },
+                  "artists":null,
+                  "tracks":[
+                      {
+                          "name":"爱情disabled",
+                          "id":29457943,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"my little airport",
+                                  "id":12264,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"适婚的年龄",
+                              "id":3022303,
+                              "type":"专辑",
+                              "size":15,
+                              "picId":6644348767457646,
+                              "musicUrl":"https://api.hibai.cn/music/Music/Music?id=210089&type=url",
+                              "blurPicUrl":"http://p1.music.126.net/tS7VSJZp13d568n56rVMIw==/6644348767457646.jpg",
+                              "companyId":0,
+                              "pic":6644348767457646,
+                              "picUrl":"http://p1.music.126.net/tS7VSJZp13d568n56rVMIw==/6644348767457646.jpg",
+                              "publishTime":1412352000000,
+                              "description":"",
+                              "tags":"",
+                              "company":"维港唱片",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_3022303",
+                              "artists":[
+                                  {
+                                      "name":"my little airport",
+                                      "id":12264,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":""
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":165146,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_29457943",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"爱情disabled",
+                              "id":51546310,
+                              "size":1983447,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":165146,
+                              "volumeDelta":-1.15
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"爱情disabled",
+                              "id":51546308,
+                              "size":6609000,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":165146,
+                              "volumeDelta":-1.56
+                          },
+                          "mMusic":{
+                              "name":"爱情disabled",
+                              "id":51546309,
+                              "size":3305034,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":165146,
+                              "volumeDelta":-1.13
+                          },
+                          "lMusic":{
+                              "name":"爱情disabled",
+                              "id":51546310,
+                              "size":1983447,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":165146,
+                              "volumeDelta":-1.15
+                          }
+                      },
+                      {
+                          "name":"Forest Boy",
+                          "id":369920,
+                          "position":2,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":7001,
+                          "disc":"1",
+                          "no":2,
+                          "artists":[
+                              {
+                                  "name":"南瓜妮歌迷俱乐部",
+                                  "id":12475,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"Esprit de l'escalier",
+                              "id":36643,
+                              "type":"EP/Single",
+                              "size":2,
+                              "picId":18935789253603232,
+                              "blurPicUrl":"http://p1.music.126.net/nxieXCUkcKjtyr65VG1s0A==/18935789253603232.jpg",
+                              "companyId":0,
+                              "pic":18935789253603232,
+                              "picUrl":"http://p1.music.126.net/nxieXCUkcKjtyr65VG1s0A==/18935789253603232.jpg",
+                              "publishTime":1294156800000,
+                              "description":"",
+                              "tags":"",
+                              "company":"re: public",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_36643",
+                              "artists":[
+                                  {
+                                      "name":"南瓜妮歌迷俱乐部",
+                                      "id":12475,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18935789253603232
+                          },
+                          "starred":false,
+                          "popularity":25,
+                          "score":25,
+                          "starredNum":0,
+                          "duration":312320,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_369920",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1294896283,
+                              "size":3748198,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":312320,
+                              "volumeDelta":-1.18,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1294896281,
+                              "size":12493889,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":312320,
+                              "volumeDelta":-1.5,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1294896282,
+                              "size":6246967,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":312320,
+                              "volumeDelta":-1.13,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1294896283,
+                              "size":3748198,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":312320,
+                              "volumeDelta":-1.18,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"遥远",
+                          "id":493623955,
+                          "position":2,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":442011,
+                          "disc":"1",
+                          "no":2,
+                          "artists":[
+                              {
+                                  "name":"李雨",
+                                  "id":12184586,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"鱼里言吾",
+                              "id":35829319,
+                              "type":"专辑",
+                              "size":11,
+                              "picId":18757668371861234,
+                              "blurPicUrl":"http://p1.music.126.net/36tzhV6YM2okvlpAYKuO-Q==/18757668371861234.jpg",
+                              "companyId":0,
+                              "pic":18757668371861234,
+                              "picUrl":"http://p1.music.126.net/36tzhV6YM2okvlpAYKuO-Q==/18757668371861234.jpg",
+                              "publishTime":1501430400000,
+                              "description":"",
+                              "tags":"",
+                              "company":"威肯互动",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+                                  "Soliloquy of The Fish"
+                              ],
+                              "status":0,
+                              "copyrightId":442011,
+                              "commentThreadId":"R_AL_3_35829319",
+                              "artists":[
+                                  {
+                                      "name":"李雨",
+                                      "id":12184586,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18757668371861234
+                          },
+                          "starred":false,
+                          "popularity":70,
+                          "score":70,
+                          "starredNum":0,
+                          "duration":296098,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_493623955",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1340040702,
+                              "size":4738865,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":296098,
+                              "volumeDelta":-1
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1340040700,
+                              "size":11847097,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":296098,
+                              "volumeDelta":-1
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1340040701,
+                              "size":7108275,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":296098,
+                              "volumeDelta":-1
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1340040702,
+                              "size":4738865,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":296098,
+                              "volumeDelta":-1
+                          }
+                      },
+                      {
+                          "name":"橙 Orange",
+                          "id":529824515,
+                          "position":0,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"雾虹",
+                                  "id":12323159,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"The First EP",
+                              "id":37253166,
+                              "type":"专辑",
+                              "size":4,
+                              "picId":109951163107183814,
+                              "blurPicUrl":"http://p1.music.126.net/XPj9lqbil7hldPQCvhMV-w==/109951163107183814.jpg",
+                              "companyId":0,
+                              "pic":109951163107183814,
+                              "picUrl":"http://p1.music.126.net/XPj9lqbil7hldPQCvhMV-w==/109951163107183814.jpg",
+                              "publishTime":1425139200007,
+                              "description":"",
+                              "tags":"",
+                              "company":"Shadow Project",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_37253166",
+                              "artists":[
+                                  {
+                                      "name":"雾虹",
+                                      "id":12323159,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163107183814
+                          },
+                          "starred":false,
+                          "popularity":35,
+                          "score":35,
+                          "starredNum":0,
+                          "duration":549522,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_529824515",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1408369476,
+                              "size":8793487,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":549522,
+                              "volumeDelta":-1
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1408369474,
+                              "size":21983652,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":549522,
+                              "volumeDelta":-1
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1408369475,
+                              "size":13190209,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":549522,
+                              "volumeDelta":-1
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1408369476,
+                              "size":8793487,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":549522,
+                              "volumeDelta":-1
+                          }
+                      },
+                      {
+                          "name":"Esprit de l'escalier",
+                          "id":369919,
+                          "position":1,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":7001,
+                          "disc":"1",
+                          "no":1,
+                          "artists":[
+                              {
+                                  "name":"南瓜妮歌迷俱乐部",
+                                  "id":12475,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"Esprit de l'escalier",
+                              "id":36643,
+                              "type":"EP/Single",
+                              "size":2,
+                              "picId":18935789253603232,
+                              "blurPicUrl":"http://p1.music.126.net/nxieXCUkcKjtyr65VG1s0A==/18935789253603232.jpg",
+                              "companyId":0,
+                              "pic":18935789253603232,
+                              "picUrl":"http://p1.music.126.net/nxieXCUkcKjtyr65VG1s0A==/18935789253603232.jpg",
+                              "publishTime":1294156800000,
+                              "description":"",
+                              "tags":"",
+                              "company":"re: public",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_36643",
+                              "artists":[
+                                  {
+                                      "name":"南瓜妮歌迷俱乐部",
+                                      "id":12475,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18935789253603232
+                          },
+                          "starred":false,
+                          "popularity":90,
+                          "score":90,
+                          "starredNum":0,
+                          "duration":210024,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_369919",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1294896280,
+                              "size":2520652,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":210024,
+                              "volumeDelta":-2.48,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1294896278,
+                              "size":8402068,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":210024,
+                              "volumeDelta":-2.86,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1294896279,
+                              "size":4201057,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":210024,
+                              "volumeDelta":-2.45,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1294896280,
+                              "size":2520652,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":210024,
+                              "volumeDelta":-2.48,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"童话国王",
+                          "id":472141616,
+                          "position":4,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":4,
+                          "artists":[
+                              {
+                                  "name":"盘尼西林",
+                                  "id":900021,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"与世界温暖相拥",
+                              "id":35368335,
+                              "type":"专辑",
+                              "size":12,
+                              "picId":18721384488023373,
+                              "blurPicUrl":"http://p1.music.126.net/DkUQn66UvzFd0mYBGU-iPw==/18721384488023373.jpg",
+                              "companyId":0,
+                              "pic":18721384488023373,
+                              "picUrl":"http://p1.music.126.net/DkUQn66UvzFd0mYBGU-iPw==/18721384488023373.jpg",
+                              "publishTime":1492444800007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35368335",
+                              "artists":[
+                                  {
+                                      "name":"盘尼西林",
+                                      "id":900021,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18721384488023373
+                          },
+                          "starred":false,
+                          "popularity":80,
+                          "score":80,
+                          "starredNum":0,
+                          "duration":208500,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_472141616",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":1,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1304972830,
+                              "size":2502784,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":208500,
+                              "volumeDelta":-2.03,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1304972828,
+                              "size":8342509,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":208500,
+                              "volumeDelta":-2.4,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1304972829,
+                              "size":4171277,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":208500,
+                              "volumeDelta":-1.99,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1304972830,
+                              "size":2502784,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":208500,
+                              "volumeDelta":-2.03,
+                              "dfsId_str":null
+                          },
+                          "transNames":[
+                              "The fairy king"
+                          ]
+                      },
+                      {
+                          "name":"旅途",
+                          "id":410181160,
+                          "position":4,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":4,
+                          "artists":[
+                              {
+                                  "name":"红白色乐队",
+                                  "id":12025585,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"轮廓",
+                              "id":34607260,
+                              "type":"EP/Single",
+                              "size":3,
+                              "picId":732274754197430,
+                              "blurPicUrl":"http://p1.music.126.net/fmh4RoXu8yT1Ejugv7WVqQ==/732274754197430.jpg",
+                              "companyId":0,
+                              "pic":732274754197430,
+                              "picUrl":"http://p1.music.126.net/fmh4RoXu8yT1Ejugv7WVqQ==/732274754197430.jpg",
+                              "publishTime":1460281492038,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_34607260",
+                              "artists":[
+                                  {
+                                      "name":"红白色乐队",
+                                      "id":12025585,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"Demo及其他"
+                          },
+                          "starred":false,
+                          "popularity":95,
+                          "score":95,
+                          "starredNum":0,
+                          "duration":270106,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_410181160",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1201920336,
+                              "size":3241944,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":270106,
+                              "volumeDelta":-3.91
+                          },
+                          "mp3Url":null,
+                          "hMusic":null,
+                          "mMusic":{
+                              "name":null,
+                              "id":1201920335,
+                              "size":5403211,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":270106,
+                              "volumeDelta":-3.87
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1201920336,
+                              "size":3241944,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":270106,
+                              "volumeDelta":-3.91
+                          }
+                      },
+                      {
+                          "name":"So Long",
+                          "id":427609829,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"The Cheers Cheers",
+                                  "id":12079050,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"不如搬去船底星",
+                              "id":34857353,
+                              "type":"专辑",
+                              "size":6,
+                              "picId":18280480323841807,
+                              "blurPicUrl":"http://p1.music.126.net/QQrQFmdxaHFprapVhDo1pA==/18280480323841807.jpg",
+                              "companyId":0,
+                              "pic":18280480323841807,
+                              "picUrl":"http://p1.music.126.net/QQrQFmdxaHFprapVhDo1pA==/18280480323841807.jpg",
+                              "publishTime":1472486400000,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_34857353",
+                              "artists":[
+                                  {
+                                      "name":"The Cheers Cheers",
+                                      "id":12079050,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18280480323841807
+                          },
+                          "starred":false,
+                          "popularity":90,
+                          "score":90,
+                          "starredNum":0,
+                          "duration":180976,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_427609829",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1230486458,
+                              "size":2172701,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":180976,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1230486456,
+                              "size":7242231,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":180976,
+                              "volumeDelta":-0.34,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1230486457,
+                              "size":3621138,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":180976,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1230486458,
+                              "size":2172701,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":180976,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"原谅我不明白你的悲伤",
+                          "id":26045007,
+                          "position":7,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":8,
+                          "artists":[
+                              {
+                                  "name":"那我懂你意思了",
+                                  "id":12476,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"原谅我不明白你的悲伤",
+                              "id":2365001,
+                              "type":"专辑",
+                              "size":9,
+                              "picId":1695446930069046,
+                              "blurPicUrl":"http://p1.music.126.net/31fUHK1IWxa8FXhj-d7LZQ==/1695446930069046.jpg",
+                              "companyId":0,
+                              "pic":1695446930069046,
+                              "picUrl":"http://p1.music.126.net/31fUHK1IWxa8FXhj-d7LZQ==/1695446930069046.jpg",
+                              "publishTime":1356278400007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice/如此",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_2365001",
+                              "artists":[
+                                  {
+                                      "name":"那我懂你意思了",
+                                      "id":12476,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版"
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":251400,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_26045007",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1394978520,
+                              "size":4023319,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":251400,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1394978518,
+                              "size":10058231,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":251400,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1394978519,
+                              "size":6034956,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":251400,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1394978520,
+                              "size":4023319,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":251400,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"光明的幻象",
+                          "id":452608013,
+                          "position":8,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":33005,
+                          "disc":"1",
+                          "no":8,
+                          "artists":[
+                              {
+                                  "name":"白百EndlessWhite",
+                                  "id":12060088,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"Nerd Noise",
+                              "id":35114540,
+                              "type":"合集",
+                              "size":10,
+                              "picId":18677404023325146,
+                              "blurPicUrl":"http://p1.music.126.net/-cQ4QpIdNNvNLoBaRe_t0g==/18677404023325146.jpg",
+                              "companyId":0,
+                              "pic":18677404023325146,
+                              "picUrl":"http://p1.music.126.net/-cQ4QpIdNNvNLoBaRe_t0g==/18677404023325146.jpg",
+                              "publishTime":1483977600007,
+                              "description":"",
+                              "tags":"",
+                              "company":"草台回声",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_35114540",
+                              "artists":[
+                                  {
+                                      "name":"群星",
+                                      "id":122455,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18677404023325146
+                          },
+                          "starred":false,
+                          "popularity":65,
+                          "score":65,
+                          "starredNum":0,
+                          "duration":372000,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_452608013",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1269529963,
+                              "size":4464789,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":372000,
+                              "volumeDelta":3.33641,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1269529961,
+                              "size":14882525,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":372000,
+                              "volumeDelta":2.88738,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1269529962,
+                              "size":7441285,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":372000,
+                              "volumeDelta":3.37463,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1269529963,
+                              "size":4464789,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":372000,
+                              "volumeDelta":3.33641,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"冬天时我喜欢靠近温暖的事",
+                          "id":534385863,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"宿羽阳",
+                                  "id":12459252,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"宿羽阳",
+                              "id":37995145,
+                              "type":"专辑",
+                              "size":14,
+                              "picId":109951163201049769,
+                              "blurPicUrl":"http://p1.music.126.net/8u7pVkGhfIfLRWSuKZJZ1g==/109951163201049769.jpg",
+                              "companyId":0,
+                              "pic":109951163201049769,
+                              "picUrl":"http://p1.music.126.net/8u7pVkGhfIfLRWSuKZJZ1g==/109951163201049769.jpg",
+                              "publishTime":1521648000000,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_37995145",
+                              "artists":[
+                                  {
+                                      "name":"宿羽阳",
+                                      "id":12459252,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163201049769
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":315227,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_534385863",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1414370992,
+                              "size":5044811,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":315227,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1414370990,
+                              "size":12611962,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":315227,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1414370991,
+                              "size":7567195,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":315227,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1414370992,
+                              "size":5044811,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":315227,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"一场空",
+                          "id":26620456,
+                          "position":2,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":456010,
+                          "disc":"1",
+                          "no":2,
+                          "artists":[
+                              {
+                                  "name":"四枝筆 Four Pens",
+                                  "id":792422,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"PM 11:59",
+                              "id":2537081,
+                              "type":"EP/Single",
+                              "size":5,
+                              "picId":19116109160774628,
+                              "blurPicUrl":"http://p1.music.126.net/ndF1sPazuBerxSR0MJmMrg==/19116109160774628.jpg",
+                              "companyId":0,
+                              "pic":19116109160774628,
+                              "picUrl":"http://p1.music.126.net/ndF1sPazuBerxSR0MJmMrg==/19116109160774628.jpg",
+                              "publishTime":1372377600000,
+                              "description":"",
+                              "tags":"",
+                              "company":"独立发行",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":456010,
+                              "commentThreadId":"R_AL_3_2537081",
+                              "artists":[
+                                  {
+                                      "name":"四枝筆 Four Pens",
+                                      "id":792422,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":19116109160774628
+                          },
+                          "starred":false,
+                          "popularity":85,
+                          "score":85,
+                          "starredNum":0,
+                          "duration":290000,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_26620456",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1272278053,
+                              "size":3480809,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":290000,
+                              "volumeDelta":-0.7,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1272278051,
+                              "size":11602591,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":290000,
+                              "volumeDelta":-1.11,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1272278052,
+                              "size":5801318,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":290000,
+                              "volumeDelta":-0.67,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1272278053,
+                              "size":3480809,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":290000,
+                              "volumeDelta":-0.7,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"不擅长的事",
+                          "id":29088293,
+                          "position":1,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":1,
+                          "artists":[
+                              {
+                                  "name":"周休八日",
+                                  "id":1066083,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"不擅长的事",
+                              "id":2988441,
+                              "type":"EP/Single",
+                              "size":3,
+                              "picId":2913705814514151,
+                              "blurPicUrl":"http://p1.music.126.net/Rb_3o6zL0UIlOBcH4Ps-LA==/2913705814514151.jpg",
+                              "companyId":0,
+                              "pic":2913705814514151,
+                              "picUrl":"http://p1.music.126.net/Rb_3o6zL0UIlOBcH4Ps-LA==/2913705814514151.jpg",
+                              "publishTime":1361721600000,
+                              "description":"",
+                              "tags":"",
+                              "company":"风和日丽",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_2988441",
+                              "artists":[
+                                  {
+                                      "name":"周休八日",
+                                      "id":1066083,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":""
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":267000,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_29088293",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":61084322,
+                              "size":3208089,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":267000,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":61084320,
+                              "size":10693528,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":267000,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":61084321,
+                              "size":5346786,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":267000,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":61084322,
+                              "size":3208089,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":267000,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"留给你的我从未",
+                          "id":524003141,
+                          "position":6,
+                          "alias":[
+                              "Those Things I Kept"
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"3",
+                          "no":6,
+                          "artists":[
+                              {
+                                  "name":"甜約翰 Sweet John",
+                                  "id":12948070,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"Dear",
+                              "id":36875878,
+                              "type":"专辑",
+                              "size":9,
+                              "picId":109951163084732892,
+                              "blurPicUrl":"http://p1.music.126.net/OxECYWAX25GRXtvfMbl1OQ==/109951163084732892.jpg",
+                              "companyId":0,
+                              "pic":109951163084732892,
+                              "picUrl":"http://p1.music.126.net/OxECYWAX25GRXtvfMbl1OQ==/109951163084732892.jpg",
+                              "publishTime":1512057600000,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_36875878",
+                              "artists":[
+                                  {
+                                      "name":"甜約翰 Sweet John",
+                                      "id":12948070,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163084732892
+                          },
+                          "starred":false,
+                          "popularity":70,
+                          "score":70,
+                          "starredNum":0,
+                          "duration":258533,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_524003141",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":5810565,
+                          "bMusic":{
+                              "name":"",
+                              "id":1396838681,
+                              "size":4137422,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":258533,
+                              "volumeDelta":-1
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1396838679,
+                              "size":10343489,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":258533,
+                              "volumeDelta":-2
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1396838680,
+                              "size":6206111,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":258533,
+                              "volumeDelta":-1
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1396838681,
+                              "size":4137422,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":258533,
+                              "volumeDelta":-1
+                          }
+                      },
+                      {
+                          "name":"城市的浪漫運作 [Demo]",
+                          "id":563560725,
+                          "position":1,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"",
+                          "no":1,
+                          "artists":[
+                              {
+                                  "name":"甜約翰 Sweet John",
+                                  "id":12948070,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"城市的浪漫運作 [Demo]",
+                              "id":38793820,
+                              "type":"专辑",
+                              "size":1,
+                              "picId":109951163304072515,
+                              "blurPicUrl":"http://p1.music.126.net/oTtsVO42LqgC1CcYf1Wadw==/109951163304072515.jpg",
+                              "companyId":0,
+                              "pic":109951163304072515,
+                              "picUrl":"http://p1.music.126.net/oTtsVO42LqgC1CcYf1Wadw==/109951163304072515.jpg",
+                              "publishTime":1526515200000,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_38793820",
+                              "artists":[
+                                  {
+                                      "name":"甜約翰 Sweet John",
+                                      "id":12948070,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"Demo及其他",
+                              "picId_str":109951163304072515
+                          },
+                          "starred":false,
+                          "popularity":95,
+                          "score":95,
+                          "starredNum":0,
+                          "duration":228556,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_563560725",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1477238491,
+                              "size":3658022,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":228556,
+                              "volumeDelta":-1
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1477238489,
+                              "size":9144991,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":228556,
+                              "volumeDelta":-1
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1477238490,
+                              "size":5487012,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":228556,
+                              "volumeDelta":-1
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1477238491,
+                              "size":3658022,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":228556,
+                              "volumeDelta":-1
+                          }
+                      },
+                      {
+                          "name":"温柔的生活革命",
+                          "id":455345543,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":405025,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"DSPS",
+                                  "id":12274422,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"我会不会又睡到下午了",
+                              "id":35138618,
+                              "type":"EP/Single",
+                              "size":3,
+                              "picId":18588343580886254,
+                              "blurPicUrl":"http://p1.music.126.net/SiEB4DBiZd2bNYg_Q-l2EQ==/18588343580886254.jpg",
+                              "companyId":0,
+                              "pic":18588343580886254,
+                              "picUrl":"http://p1.music.126.net/SiEB4DBiZd2bNYg_Q-l2EQ==/18588343580886254.jpg",
+                              "publishTime":1485360000007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":3,
+                              "copyrightId":405025,
+                              "commentThreadId":"R_AL_3_35138618",
+                              "artists":[
+                                  {
+                                      "name":"DSPS",
+                                      "id":12274422,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18588343580886254
+                          },
+                          "starred":false,
+                          "popularity":70,
+                          "score":70,
+                          "starredNum":0,
+                          "duration":219004,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_455345543",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1274810060,
+                              "size":2628799,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":219004,
+                              "volumeDelta":-1.65,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1274810058,
+                              "size":8762558,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":219004,
+                              "volumeDelta":-2,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1274810059,
+                              "size":4381302,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":219004,
+                              "volumeDelta":-1.59,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1274810060,
+                              "size":2628799,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":219004,
+                              "volumeDelta":-1.65,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"橘色",
+                          "id":380528,
+                          "position":2,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":2,
+                          "artists":[
+                              {
+                                  "name":"Silverbus",
+                                  "id":12865,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"橘色",
+                              "id":37643,
+                              "type":"专辑",
+                              "size":10,
+                              "picId":126443837212183,
+                              "blurPicUrl":"http://p1.music.126.net/iZrc8HvcE93T9gZy7icQUg==/126443837212183.jpg",
+                              "companyId":0,
+                              "pic":126443837212183,
+                              "picUrl":"http://p1.music.126.net/iZrc8HvcE93T9gZy7icQUg==/126443837212183.jpg",
+                              "publishTime":1293811200000,
+                              "description":"",
+                              "tags":"",
+                              "company":"有料音乐",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_37643",
+                              "artists":[
+                                  {
+                                      "name":"Silverbus",
+                                      "id":12865,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版"
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":317000,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_380528",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"橘色",
+                              "id":21111993,
+                              "size":3826897,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":317000,
+                              "volumeDelta":-0.8
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"橘色",
+                              "id":21111991,
+                              "size":12703931,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":317000,
+                              "volumeDelta":-1.14
+                          },
+                          "mMusic":{
+                              "name":"橘色",
+                              "id":21111992,
+                              "size":6363491,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":317000,
+                              "volumeDelta":-0.72
+                          },
+                          "lMusic":{
+                              "name":"橘色",
+                              "id":21111993,
+                              "size":3826897,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":317000,
+                              "volumeDelta":-0.8
+                          }
+                      },
+                      {
+                          "name":"生命之重与无所适从 Suffering",
+                          "id":529824514,
+                          "position":0,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":2,
+                          "artists":[
+                              {
+                                  "name":"雾虹",
+                                  "id":12323159,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"The First EP",
+                              "id":37253166,
+                              "type":"专辑",
+                              "size":4,
+                              "picId":109951163107183814,
+                              "blurPicUrl":"http://p1.music.126.net/XPj9lqbil7hldPQCvhMV-w==/109951163107183814.jpg",
+                              "companyId":0,
+                              "pic":109951163107183814,
+                              "picUrl":"http://p1.music.126.net/XPj9lqbil7hldPQCvhMV-w==/109951163107183814.jpg",
+                              "publishTime":1425139200007,
+                              "description":"",
+                              "tags":"",
+                              "company":"Shadow Project",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_37253166",
+                              "artists":[
+                                  {
+                                      "name":"雾虹",
+                                      "id":12323159,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163107183814
+                          },
+                          "starred":false,
+                          "popularity":50,
+                          "score":50,
+                          "starredNum":0,
+                          "duration":402516,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_529824514",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1408374692,
+                              "size":6441213,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":402516,
+                              "volumeDelta":-2
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1408374690,
+                              "size":16102966,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":402516,
+                              "volumeDelta":-2
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1408374691,
+                              "size":9661797,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":402516,
+                              "volumeDelta":-2
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1408374692,
+                              "size":6441213,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":402516,
+                              "volumeDelta":-2
+                          }
+                      },
+                      {
+                          "name":"食人梦",
+                          "id":452614959,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"Vast & Hazy",
+                                  "id":12029116,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"次等秘密",
+                              "id":35120230,
+                              "type":"EP/Single",
+                              "size":3,
+                              "picId":18689498650639202,
+                              "blurPicUrl":"http://p1.music.126.net/zdW50P7pLujRiQwa2o9x2Q==/18689498650639202.jpg",
+                              "companyId":0,
+                              "pic":18689498650639202,
+                              "picUrl":"http://p1.music.126.net/zdW50P7pLujRiQwa2o9x2Q==/18689498650639202.jpg",
+                              "publishTime":1483891200000,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+                                  "Insignificant Secret"
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35120230",
+                              "artists":[
+                                  {
+                                      "name":"Vast & Hazy",
+                                      "id":12029116,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18689498650639202
+                          },
+                          "starred":false,
+                          "popularity":85,
+                          "score":85,
+                          "starredNum":0,
+                          "duration":270832,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_452614959",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":5902124,
+                          "bMusic":{
+                              "name":null,
+                              "id":1269673140,
+                              "size":3250722,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":270832,
+                              "volumeDelta":-3.12,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1269673138,
+                              "size":10835636,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":270832,
+                              "volumeDelta":-3.48,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1269673139,
+                              "size":5417841,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":270832,
+                              "volumeDelta":-3.06,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1269673140,
+                              "size":3250722,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":270832,
+                              "volumeDelta":-3.12,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"独角兽",
+                          "id":511920319,
+                          "position":2,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"",
+                          "no":2,
+                          "artists":[
+                              {
+                                  "name":"告五人",
+                                  "id":12676697,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"迷雾之子",
+                              "id":36450449,
+                              "type":"EP/Single",
+                              "size":3,
+                              "picId":109951163040117096,
+                              "blurPicUrl":"http://p1.music.126.net/OvA9ioBPtgj4l4MePVJSpQ==/109951163040117096.jpg",
+                              "companyId":0,
+                              "pic":109951163040117096,
+                              "picUrl":"http://p1.music.126.net/OvA9ioBPtgj4l4MePVJSpQ==/109951163040117096.jpg",
+                              "publishTime":1507564800007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice/更漂亮音乐工作室",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_36450449",
+                              "artists":[
+                                  {
+                                      "name":"告五人",
+                                      "id":12676697,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163040117096
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":399272,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_511920319",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1367492280,
+                              "size":6389386,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":399272,
+                              "volumeDelta":-1
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1367492278,
+                              "size":15973399,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":399272,
+                              "volumeDelta":-2
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1367492279,
+                              "size":9584057,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":399272,
+                              "volumeDelta":-1
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1367492280,
+                              "size":6389386,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":399272,
+                              "volumeDelta":-1
+                          }
+                      },
+                      {
+                          "name":"沉静",
+                          "id":464377017,
+                          "position":11,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":11,
+                          "artists":[
+                              {
+                                  "name":"雾虹",
+                                  "id":12323159,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"苦涩的痛击",
+                              "id":35256282,
+                              "type":"专辑",
+                              "size":11,
+                              "picId":18510278255443527,
+                              "blurPicUrl":"http://p1.music.126.net/eQgHXz8YFZis2coCYUzDoA==/18510278255443527.jpg",
+                              "companyId":0,
+                              "pic":18510278255443527,
+                              "picUrl":"http://p1.music.126.net/eQgHXz8YFZis2coCYUzDoA==/18510278255443527.jpg",
+                              "publishTime":1489334400007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35256282",
+                              "artists":[
+                                  {
+                                      "name":"雾虹",
+                                      "id":12323159,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18510278255443527
+                          },
+                          "starred":false,
+                          "popularity":80,
+                          "score":80,
+                          "starredNum":0,
+                          "duration":368615,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_464377017",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":1,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1289903369,
+                              "size":4424351,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":368615,
+                              "volumeDelta":-0.33,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1289903367,
+                              "size":14747733,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":368615,
+                              "volumeDelta":-0.68,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1289903368,
+                              "size":7373889,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":368615,
+                              "volumeDelta":-0.24,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1289903369,
+                              "size":4424351,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":368615,
+                              "volumeDelta":-0.33,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"自我探索",
+                          "id":464377016,
+                          "position":10,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":10,
+                          "artists":[
+                              {
+                                  "name":"雾虹",
+                                  "id":12323159,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"苦涩的痛击",
+                              "id":35256282,
+                              "type":"专辑",
+                              "size":11,
+                              "picId":18510278255443527,
+                              "blurPicUrl":"http://p1.music.126.net/eQgHXz8YFZis2coCYUzDoA==/18510278255443527.jpg",
+                              "companyId":0,
+                              "pic":18510278255443527,
+                              "picUrl":"http://p1.music.126.net/eQgHXz8YFZis2coCYUzDoA==/18510278255443527.jpg",
+                              "publishTime":1489334400007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35256282",
+                              "artists":[
+                                  {
+                                      "name":"雾虹",
+                                      "id":12323159,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18510278255443527
+                          },
+                          "starred":false,
+                          "popularity":75,
+                          "score":75,
+                          "starredNum":0,
+                          "duration":307044,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_464377016",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":1,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1289903366,
+                              "size":3685504,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":307044,
+                              "volumeDelta":-0.27,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1289903364,
+                              "size":12284909,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":307044,
+                              "volumeDelta":-0.66,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1289903365,
+                              "size":6142477,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":307044,
+                              "volumeDelta":-0.24,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1289903366,
+                              "size":3685504,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":307044,
+                              "volumeDelta":-0.27,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"到底是",
+                          "id":28068121,
+                          "position":2,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":653015,
+                          "disc":"1",
+                          "no":2,
+                          "artists":[
+                              {
+                                  "name":"先知玛莉",
+                                  "id":12358,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"My Fake True Love",
+                              "id":2723014,
+                              "type":"专辑",
+                              "size":12,
+                              "picId":109951163301468002,
+                              "blurPicUrl":"http://p1.music.126.net/YFyFK8GP8ls__waDFxzJKA==/109951163301468002.jpg",
+                              "companyId":0,
+                              "pic":109951163301468002,
+                              "picUrl":"http://p1.music.126.net/YFyFK8GP8ls__waDFxzJKA==/109951163301468002.jpg",
+                              "publishTime":1527206400000,
+                              "description":"",
+                              "tags":"",
+                              "company":"未卜娛樂有限公司",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":653015,
+                              "commentThreadId":"R_AL_3_2723014",
+                              "artists":[
+                                  {
+                                      "name":"先知玛莉",
+                                      "id":12358,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163301468002
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":337533,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_28068121",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1475694111,
+                              "size":5401748,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":337533,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1475694109,
+                              "size":13504305,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":337533,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1475694110,
+                              "size":8102600,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":337533,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1475694111,
+                              "size":5401748,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":337533,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"返潮",
+                          "id":455764583,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"人行道乐队",
+                                  "id":12275446,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"流浪不止是梦里相见",
+                              "id":35146659,
+                              "type":"专辑",
+                              "size":4,
+                              "picId":109951162849231171,
+                              "blurPicUrl":"http://p1.music.126.net/2jKN9ybgcJI695R2Hnk1cA==/109951162849231171.jpg",
+                              "companyId":0,
+                              "pic":109951162849231171,
+                              "picUrl":"http://p1.music.126.net/2jKN9ybgcJI695R2Hnk1cA==/109951162849231171.jpg",
+                              "publishTime":1485245892038,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_35146659",
+                              "artists":[
+                                  {
+                                      "name":"人行道乐队",
+                                      "id":12275446,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"Demo及其他",
+                              "picId_str":109951162849231171
+                          },
+                          "starred":false,
+                          "popularity":90,
+                          "score":90,
+                          "starredNum":0,
+                          "duration":210259,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_455764583",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1274824010,
+                              "size":2523473,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":210259,
+                              "volumeDelta":-0.01,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1274715008,
+                              "size":8411472,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":210259,
+                              "volumeDelta":-0.35,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1274715009,
+                              "size":4205759,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":210259,
+                              "volumeDelta":0.07,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1274824010,
+                              "size":2523473,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":210259,
+                              "volumeDelta":-0.01,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"那些说不出口的梦想和看不清颜色的人生",
+                          "id":41602771,
+                          "position":4,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":456010,
+                          "disc":"1",
+                          "no":4,
+                          "artists":[
+                              {
+                                  "name":"玩具兵团乐队",
+                                  "id":1159059,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"北京对不起",
+                              "id":3441592,
+                              "type":"专辑",
+                              "size":9,
+                              "picId":109951162843874030,
+                              "blurPicUrl":"http://p1.music.126.net/sVIWFN-DwhQNprmibbvdYQ==/109951162843874030.jpg",
+                              "companyId":0,
+                              "pic":109951162843874030,
+                              "picUrl":"http://p1.music.126.net/sVIWFN-DwhQNprmibbvdYQ==/109951162843874030.jpg",
+                              "publishTime":1451606400000,
+                              "description":"",
+                              "tags":"",
+                              "company":"看见网络",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":456010,
+                              "commentThreadId":"R_AL_3_3441592",
+                              "artists":[
+                                  {
+                                      "name":"玩具兵团乐队",
+                                      "id":1159059,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951162843874030
+                          },
+                          "starred":false,
+                          "popularity":80,
+                          "score":80,
+                          "starredNum":0,
+                          "duration":158221,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_41602771",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1272542461,
+                              "size":1900923,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":158221,
+                              "volumeDelta":-3.1,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1272542459,
+                              "size":6336305,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":158221,
+                              "volumeDelta":-3.5,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1272542460,
+                              "size":3168175,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":158221,
+                              "volumeDelta":-3.06,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1272542461,
+                              "size":1900923,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":158221,
+                              "volumeDelta":-3.1,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"巴士十一号",
+                          "id":348000,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":682010,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"草莓救星",
+                                  "id":11237,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"羽毛河",
+                              "id":34304,
+                              "type":"专辑",
+                              "size":12,
+                              "picId":109951163177904035,
+                              "blurPicUrl":"http://p1.music.126.net/suboDqi6DEZF26rhF6kKTw==/109951163177904035.jpg",
+                              "companyId":0,
+                              "pic":109951163177904035,
+                              "picUrl":"http://p1.music.126.net/suboDqi6DEZF26rhF6kKTw==/109951163177904035.jpg",
+                              "publishTime":1293724800000,
+                              "description":"",
+                              "tags":"",
+                              "company":"风和日丽",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_34304",
+                              "artists":[
+                                  {
+                                      "name":"草莓救星",
+                                      "id":11237,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163177904035
+                          },
+                          "starred":false,
+                          "popularity":90,
+                          "score":90,
+                          "starredNum":0,
+                          "duration":233253,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":"",
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_348000",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1429116961,
+                              "size":3733255,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":233253,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1429116959,
+                              "size":9333072,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":233253,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1429116960,
+                              "size":5599861,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":233253,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1429116961,
+                              "size":3733255,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":233253,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"不如跳舞",
+                          "id":469699985,
+                          "position":6,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":6,
+                          "artists":[
+                              {
+                                  "name":"脆弱少女组",
+                                  "id":12355461,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"一些难过的时候可以听的流行歌曲",
+                              "id":35326980,
+                              "type":"EP/Single",
+                              "size":7,
+                              "picId":18901704393154231,
+                              "blurPicUrl":"http://p1.music.126.net/Gk5lsAcMghmeZpC78zbg8A==/18901704393154231.jpg",
+                              "companyId":0,
+                              "pic":18901704393154231,
+                              "picUrl":"http://p1.music.126.net/Gk5lsAcMghmeZpC78zbg8A==/18901704393154231.jpg",
+                              "publishTime":1491494400007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35326980",
+                              "artists":[
+                                  {
+                                      "name":"脆弱少女组",
+                                      "id":12355461,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18901704393154231
+                          },
+                          "starred":false,
+                          "popularity":70,
+                          "score":70,
+                          "starredNum":0,
+                          "duration":249143,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_469699985",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":1,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1299681673,
+                              "size":2990543,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":249143,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1299681671,
+                              "size":9968370,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":249143,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1299681672,
+                              "size":4984208,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":249143,
+                              "volumeDelta":0.144067,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1299681673,
+                              "size":2990543,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":249143,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"爱人有新欢",
+                          "id":431259108,
+                          "position":2,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"1",
+                          "no":2,
+                          "artists":[
+                              {
+                                  "name":"my little airport",
+                                  "id":12264,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"火炭丽琪",
+                              "id":34881053,
+                              "type":"专辑",
+                              "size":17,
+                              "picId":3437073358595443,
+                              "blurPicUrl":"http://p1.music.126.net/KxrvsMLnTJ7SEzG4exlngg==/3437073358595443.jpg",
+                              "companyId":0,
+                              "pic":3437073358595443,
+                              "picUrl":"http://p1.music.126.net/KxrvsMLnTJ7SEzG4exlngg==/3437073358595443.jpg",
+                              "publishTime":1473868800007,
+                              "description":"",
+                              "tags":"",
+                              "company":"维港唱片",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_34881053",
+                              "artists":[
+                                  {
+                                      "name":"my little airport",
+                                      "id":12264,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版"
+                          },
+                          "starred":false,
+                          "popularity":95,
+                          "score":95,
+                          "starredNum":0,
+                          "duration":125626,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_431259108",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1235551173,
+                              "size":1507832,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":125626,
+                              "volumeDelta":-1.27
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1235551171,
+                              "size":5026003,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":125626,
+                              "volumeDelta":-1.63,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1235551172,
+                              "size":2513024,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":125626,
+                              "volumeDelta":-1.21
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1235551173,
+                              "size":1507832,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":125626,
+                              "volumeDelta":-1.27
+                          }
+                      },
+                      {
+                          "name":"浴室",
+                          "id":483378334,
+                          "position":0,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":8,
+                          "artists":[
+                              {
+                                  "name":"Deca Joins",
+                                  "id":12463331,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"浴室",
+                              "id":35590687,
+                              "type":"专辑",
+                              "size":9,
+                              "picId":18910500486297525,
+                              "blurPicUrl":"http://p1.music.126.net/byjfkEIOWI_RmxSKEWTPyw==/18910500486297525.jpg",
+                              "companyId":0,
+                              "pic":18910500486297525,
+                              "picUrl":"http://p1.music.126.net/byjfkEIOWI_RmxSKEWTPyw==/18910500486297525.jpg",
+                              "publishTime":1496851200007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice/Airhead Records",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35590687",
+                              "artists":[
+                                  {
+                                      "name":"Deca Joins",
+                                      "id":12463331,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18910500486297525
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":259953,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_483378334",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1320663968,
+                              "size":4160409,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":259953,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1320663966,
+                              "size":10400958,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":259953,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1320663967,
+                              "size":6240592,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":259953,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1320663968,
+                              "size":4160409,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":259953,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"Phoebe's Oatmeal Cookies",
+                          "id":506943095,
+                          "position":5,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"",
+                          "no":5,
+                          "artists":[
+                              {
+                                  "name":"Butterbeer",
+                                  "id":12638491,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"Obliviate",
+                              "id":36232737,
+                              "type":"专辑",
+                              "size":8,
+                              "picId":109951163026888570,
+                              "blurPicUrl":"http://p1.music.126.net/Vdmr58XOvKSETrHT6ZXPRg==/109951163026888570.jpg",
+                              "companyId":0,
+                              "pic":109951163026888570,
+                              "picUrl":"http://p1.music.126.net/Vdmr58XOvKSETrHT6ZXPRg==/109951163026888570.jpg",
+                              "publishTime":1506614400000,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_36232737",
+                              "artists":[
+                                  {
+                                      "name":"Butterbeer",
+                                      "id":12638491,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163026888570
+                          },
+                          "starred":false,
+                          "popularity":5,
+                          "score":5,
+                          "starredNum":0,
+                          "duration":231494,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_506943095",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1362997023,
+                              "size":3704834,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":231494,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1362997021,
+                              "size":9262019,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":231494,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1362997022,
+                              "size":5557229,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":231494,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1362997023,
+                              "size":3704834,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":231494,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"Distance",
+                          "id":506938811,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"Butterbeer",
+                                  "id":12638491,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"Obliviate",
+                              "id":36232737,
+                              "type":"专辑",
+                              "size":8,
+                              "picId":109951163026888570,
+                              "blurPicUrl":"http://p1.music.126.net/Vdmr58XOvKSETrHT6ZXPRg==/109951163026888570.jpg",
+                              "companyId":0,
+                              "pic":109951163026888570,
+                              "picUrl":"http://p1.music.126.net/Vdmr58XOvKSETrHT6ZXPRg==/109951163026888570.jpg",
+                              "publishTime":1506614400000,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_36232737",
+                              "artists":[
+                                  {
+                                      "name":"Butterbeer",
+                                      "id":12638491,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163026888570
+                          },
+                          "starred":false,
+                          "popularity":60,
+                          "score":60,
+                          "starredNum":0,
+                          "duration":262670,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_506938811",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1362907428,
+                              "size":4203877,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":262670,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1362907426,
+                              "size":10509627,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":262670,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1362907427,
+                              "size":6305794,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":262670,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1362907428,
+                              "size":4203877,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":262670,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"一个秘密",
+                          "id":506940176,
+                          "position":1,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"",
+                          "no":1,
+                          "artists":[
+                              {
+                                  "name":"Butterbeer",
+                                  "id":12638491,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"Obliviate",
+                              "id":36232737,
+                              "type":"专辑",
+                              "size":8,
+                              "picId":109951163026888570,
+                              "blurPicUrl":"http://p1.music.126.net/Vdmr58XOvKSETrHT6ZXPRg==/109951163026888570.jpg",
+                              "companyId":0,
+                              "pic":109951163026888570,
+                              "picUrl":"http://p1.music.126.net/Vdmr58XOvKSETrHT6ZXPRg==/109951163026888570.jpg",
+                              "publishTime":1506614400000,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_36232737",
+                              "artists":[
+                                  {
+                                      "name":"Butterbeer",
+                                      "id":12638491,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163026888570
+                          },
+                          "starred":false,
+                          "popularity":50,
+                          "score":50,
+                          "starredNum":0,
+                          "duration":308560,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_506940176",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1362903651,
+                              "size":4938231,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":308560,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1362903649,
+                              "size":12345513,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":308560,
+                              "volumeDelta":0
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1362903650,
+                              "size":7407325,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":308560,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1362903651,
+                              "size":4938231,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":308560,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"失去尼欧",
+                          "id":469699984,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"脆弱少女组",
+                                  "id":12355461,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"一些难过的时候可以听的流行歌曲",
+                              "id":35326980,
+                              "type":"EP/Single",
+                              "size":7,
+                              "picId":18901704393154231,
+                              "blurPicUrl":"http://p1.music.126.net/Gk5lsAcMghmeZpC78zbg8A==/18901704393154231.jpg",
+                              "companyId":0,
+                              "pic":18901704393154231,
+                              "picUrl":"http://p1.music.126.net/Gk5lsAcMghmeZpC78zbg8A==/18901704393154231.jpg",
+                              "publishTime":1491494400007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35326980",
+                              "artists":[
+                                  {
+                                      "name":"脆弱少女组",
+                                      "id":12355461,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18901704393154231
+                          },
+                          "starred":false,
+                          "popularity":75,
+                          "score":75,
+                          "starredNum":0,
+                          "duration":221589,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_469699984",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":1,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":null,
+                              "id":1299681670,
+                              "size":2659832,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":221589,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1299681668,
+                              "size":8866003,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":221589,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1299681669,
+                              "size":4433024,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":221589,
+                              "volumeDelta":0.215239,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1299681670,
+                              "size":2659832,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":221589,
+                              "volumeDelta":-0.000265076,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"白日梦",
+                          "id":533788692,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"红白色乐队",
+                                  "id":12025585,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"轮廓",
+                              "id":34607260,
+                              "type":"EP/Single",
+                              "size":3,
+                              "picId":732274754197430,
+                              "blurPicUrl":"http://p1.music.126.net/fmh4RoXu8yT1Ejugv7WVqQ==/732274754197430.jpg",
+                              "companyId":0,
+                              "pic":732274754197430,
+                              "picUrl":"http://p1.music.126.net/fmh4RoXu8yT1Ejugv7WVqQ==/732274754197430.jpg",
+                              "publishTime":1460281492038,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":1,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_34607260",
+                              "artists":[
+                                  {
+                                      "name":"红白色乐队",
+                                      "id":12025585,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"Demo及其他"
+                          },
+                          "starred":false,
+                          "popularity":80,
+                          "score":80,
+                          "starredNum":0,
+                          "duration":305000,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_533788692",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1413680180,
+                              "size":4880971,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":305000,
+                              "volumeDelta":-4
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1413680178,
+                              "size":12202362,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":305000,
+                              "volumeDelta":-5
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1413680179,
+                              "size":7321435,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":305000,
+                              "volumeDelta":-4
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1413680180,
+                              "size":4880971,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":305000,
+                              "volumeDelta":-4
+                          }
+                      },
+                      {
+                          "name":"街角",
+                          "id":532415777,
+                          "position":3,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"",
+                          "no":3,
+                          "artists":[
+                              {
+                                  "name":"贰伍吸菸所 Smoking Area 25",
+                                  "id":13037719,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"光明路",
+                              "id":37354603,
+                              "type":"专辑",
+                              "size":6,
+                              "picId":109951163114978069,
+                              "blurPicUrl":"http://p1.music.126.net/WUbRFAhaE0DamJnc-dtS5w==/109951163114978069.jpg",
+                              "companyId":0,
+                              "pic":109951163114978069,
+                              "picUrl":"http://p1.music.126.net/WUbRFAhaE0DamJnc-dtS5w==/109951163114978069.jpg",
+                              "publishTime":1517760000000,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_37354603",
+                              "artists":[
+                                  {
+                                      "name":"贰伍吸菸所 Smoking Area 25",
+                                      "id":13037719,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163114978069
+                          },
+                          "starred":false,
+                          "popularity":90,
+                          "score":90,
+                          "starredNum":0,
+                          "duration":379893,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_532415777",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1411272208,
+                              "size":6079260,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":379893,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1411272206,
+                              "size":15198085,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":379893,
+                              "volumeDelta":-1
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1411272207,
+                              "size":9118868,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":379893,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1411272208,
+                              "size":6079260,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":379893,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"来自1960",
+                          "id":419115185,
+                          "position":1,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":1,
+                          "artists":[
+                              {
+                                  "name":"FLUX",
+                                  "id":1192416,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"多元观点",
+                              "id":34750372,
+                              "type":"专辑",
+                              "size":10,
+                              "picId":3446968957416890,
+                              "blurPicUrl":"http://p1.music.126.net/9rL7ZfvVWr8ymWCARWZ2cg==/3446968957416890.jpg",
+                              "companyId":0,
+                              "pic":3446968957416890,
+                              "picUrl":"http://p1.music.126.net/9rL7ZfvVWr8ymWCARWZ2cg==/3446968957416890.jpg",
+                              "publishTime":1467302400007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_34750372",
+                              "artists":[
+                                  {
+                                      "name":"FLUX",
+                                      "id":1192416,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版"
+                          },
+                          "starred":false,
+                          "popularity":90,
+                          "score":90,
+                          "starredNum":0,
+                          "duration":302360,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_419115185",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":5510101,
+                          "bMusic":{
+                              "name":null,
+                              "id":1216483331,
+                              "size":3629080,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":302360,
+                              "volumeDelta":-2.98
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1216483329,
+                              "size":12096827,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":302360,
+                              "volumeDelta":-3.32
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1216483330,
+                              "size":6048436,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":302360,
+                              "volumeDelta":-2.89
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1216483331,
+                              "size":3629080,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":302360,
+                              "volumeDelta":-2.98
+                          }
+                      },
+                      {
+                          "name":"关渡口",
+                          "id":483378331,
+                          "position":0,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":4,
+                          "artists":[
+                              {
+                                  "name":"Deca Joins",
+                                  "id":12463331,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"浴室",
+                              "id":35590687,
+                              "type":"专辑",
+                              "size":9,
+                              "picId":18910500486297525,
+                              "blurPicUrl":"http://p1.music.126.net/byjfkEIOWI_RmxSKEWTPyw==/18910500486297525.jpg",
+                              "companyId":0,
+                              "pic":18910500486297525,
+                              "picUrl":"http://p1.music.126.net/byjfkEIOWI_RmxSKEWTPyw==/18910500486297525.jpg",
+                              "publishTime":1496851200007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice/Airhead Records",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35590687",
+                              "artists":[
+                                  {
+                                      "name":"Deca Joins",
+                                      "id":12463331,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18910500486297525
+                          },
+                          "starred":false,
+                          "popularity":90,
+                          "score":90,
+                          "starredNum":0,
+                          "duration":280529,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_483378331",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1320745098,
+                              "size":4489761,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":280529,
+                              "volumeDelta":-1
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1320745096,
+                              "size":11224338,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":280529,
+                              "volumeDelta":-2
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1320745097,
+                              "size":6734620,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":280529,
+                              "volumeDelta":-1
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1320745098,
+                              "size":4489761,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":280529,
+                              "volumeDelta":-1
+                          }
+                      },
+                      {
+                          "name":"Anna",
+                          "id":532417364,
+                          "position":4,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":0,
+                          "copyrightId":0,
+                          "disc":"",
+                          "no":4,
+                          "artists":[
+                              {
+                                  "name":"贰伍吸菸所 Smoking Area 25",
+                                  "id":13037719,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"光明路",
+                              "id":37354603,
+                              "type":"专辑",
+                              "size":6,
+                              "picId":109951163114978069,
+                              "blurPicUrl":"http://p1.music.126.net/WUbRFAhaE0DamJnc-dtS5w==/109951163114978069.jpg",
+                              "companyId":0,
+                              "pic":109951163114978069,
+                              "picUrl":"http://p1.music.126.net/WUbRFAhaE0DamJnc-dtS5w==/109951163114978069.jpg",
+                              "publishTime":1517760000000,
+                              "description":"",
+                              "tags":"",
+                              "company":null,
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":0,
+                              "commentThreadId":"R_AL_3_37354603",
+                              "artists":[
+                                  {
+                                      "name":"贰伍吸菸所 Smoking Area 25",
+                                      "id":13037719,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":109951163114978069
+                          },
+                          "starred":false,
+                          "popularity":80,
+                          "score":80,
+                          "starredNum":0,
+                          "duration":305413,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_532417364",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":2,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1411256253,
+                              "size":4887658,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":305413,
+                              "volumeDelta":0
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1411256251,
+                              "size":12219080,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":305413,
+                              "volumeDelta":-1
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1411256252,
+                              "size":7331466,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":305413,
+                              "volumeDelta":0
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1411256253,
+                              "size":4887658,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":305413,
+                              "volumeDelta":0
+                          }
+                      },
+                      {
+                          "name":"奇幻旅程",
+                          "id":444548572,
+                          "position":0,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":7001,
+                          "disc":"1",
+                          "no":6,
+                          "artists":[
+                              {
+                                  "name":"Night Keepers 守夜人",
+                                  "id":12203384,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"永夜岛",
+                              "id":35023614,
+                              "type":"专辑",
+                              "size":10,
+                              "picId":18673005976611910,
+                              "blurPicUrl":"http://p1.music.126.net/7YITt7c3rYqTvXGQNyNgPg==/18673005976611910.jpg",
+                              "companyId":0,
+                              "pic":18673005976611910,
+                              "picUrl":"http://p1.music.126.net/7YITt7c3rYqTvXGQNyNgPg==/18673005976611910.jpg",
+                              "publishTime":1480608000007,
+                              "description":"",
+                              "tags":"",
+                              "company":"索尼音乐",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":3,
+                              "copyrightId":7001,
+                              "commentThreadId":"R_AL_3_35023614",
+                              "artists":[
+                                  {
+                                      "name":"Night Keepers 守夜人",
+                                      "id":12203384,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18673005976611910
+                          },
+                          "starred":false,
+                          "popularity":25,
+                          "score":25,
+                          "starredNum":0,
+                          "duration":244213,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_444548572",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":5469976,
+                          "bMusic":{
+                              "name":null,
+                              "id":1257303296,
+                              "size":2931297,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":244213,
+                              "volumeDelta":-2.12,
+                              "dfsId_str":null
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":null,
+                              "id":1257303294,
+                              "size":9770885,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":244213,
+                              "volumeDelta":-2.54,
+                              "dfsId_str":null
+                          },
+                          "mMusic":{
+                              "name":null,
+                              "id":1257303295,
+                              "size":4885465,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":160000,
+                              "playTime":244213,
+                              "volumeDelta":-2.1,
+                              "dfsId_str":null
+                          },
+                          "lMusic":{
+                              "name":null,
+                              "id":1257303296,
+                              "size":2931297,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":96000,
+                              "playTime":244213,
+                              "volumeDelta":-2.12,
+                              "dfsId_str":null
+                          }
+                      },
+                      {
+                          "name":"一去不回來",
+                          "id":483242432,
+                          "position":0,
+                          "alias":[
+
+                          ],
+                          "status":0,
+                          "fee":8,
+                          "copyrightId":36016,
+                          "disc":"1",
+                          "no":1,
+                          "artists":[
+                              {
+                                  "name":"Deca Joins",
+                                  "id":12463331,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              }
+                          ],
+                          "album":{
+                              "name":"浴室",
+                              "id":35590687,
+                              "type":"专辑",
+                              "size":9,
+                              "picId":18910500486297525,
+                              "blurPicUrl":"http://p1.music.126.net/byjfkEIOWI_RmxSKEWTPyw==/18910500486297525.jpg",
+                              "companyId":0,
+                              "pic":18910500486297525,
+                              "picUrl":"http://p1.music.126.net/byjfkEIOWI_RmxSKEWTPyw==/18910500486297525.jpg",
+                              "publishTime":1496851200007,
+                              "description":"",
+                              "tags":"",
+                              "company":"StreetVoice/Airhead Records",
+                              "briefDesc":"",
+                              "artist":{
+                                  "name":"",
+                                  "id":0,
+                                  "picId":0,
+                                  "img1v1Id":0,
+                                  "briefDesc":"",
+                                  "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                  "albumSize":0,
+                                  "alias":[
+
+                                  ],
+                                  "trans":"",
+                                  "musicSize":0
+                              },
+                              "songs":[
+
+                              ],
+                              "alias":[
+
+                              ],
+                              "status":0,
+                              "copyrightId":36016,
+                              "commentThreadId":"R_AL_3_35590687",
+                              "artists":[
+                                  {
+                                      "name":"Deca Joins",
+                                      "id":12463331,
+                                      "picId":0,
+                                      "img1v1Id":0,
+                                      "briefDesc":"",
+                                      "picUrl":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "img1v1Url":"http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+                                      "albumSize":0,
+                                      "alias":[
+
+                                      ],
+                                      "trans":"",
+                                      "musicSize":0
+                                  }
+                              ],
+                              "subType":"录音室版",
+                              "picId_str":18910500486297525
+                          },
+                          "starred":false,
+                          "popularity":100,
+                          "score":100,
+                          "starredNum":0,
+                          "duration":286213,
+                          "playedNum":0,
+                          "dayPlays":0,
+                          "hearTime":0,
+                          "ringtone":null,
+                          "crbt":null,
+                          "audition":null,
+                          "copyFrom":"",
+                          "commentThreadId":"R_SO_4_483242432",
+                          "rtUrl":null,
+                          "ftype":0,
+                          "rtUrls":[
+
+                          ],
+                          "copyright":0,
+                          "rtype":0,
+                          "rurl":null,
+                          "mvid":0,
+                          "bMusic":{
+                              "name":"",
+                              "id":1320677126,
+                              "size":4580458,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":286213,
+                              "volumeDelta":-1
+                          },
+                          "mp3Url":null,
+                          "hMusic":{
+                              "name":"",
+                              "id":1320677124,
+                              "size":11451080,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":320000,
+                              "playTime":286213,
+                              "volumeDelta":-2
+                          },
+                          "mMusic":{
+                              "name":"",
+                              "id":1320677125,
+                              "size":6870666,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":192000,
+                              "playTime":286213,
+                              "volumeDelta":-2
+                          },
+                          "lMusic":{
+                              "name":"",
+                              "id":1320677126,
+                              "size":4580458,
+                              "extension":"mp3",
+                              "sr":44100,
+                              "dfsId":0,
+                              "bitrate":128000,
+                              "playTime":286213,
+                              "volumeDelta":-1
+                          }
+                      }
+                  ],
+                  "privacy":0,
+                  "newImported":false,
+                  "specialType":0,
+                  "anonimous":false,
+                  "tags":[
+                      "华语",
+                      "另类/独立",
+                      "流行"
+                  ],
+                  "highQuality":false,
+                  "trackUpdateTime":1533300172534,
+                  "trackCount":40,
+                  "totalDuration":0,
+                  "updateTime":1533635946789,
+                  "commentThreadId":"A_PL_0_2315893920",
+                  "coverImgUrl":"http://p1.music.126.net/9yjA7A0zirLS0231Qp3qNA==/109951163446800499.jpg",
+                  "subscribedCount":7642,
+                  "cloudTrackCount":0,
+                  "description":"对每个人而言，真正的职责只有一个：找到自我然后在心中坚守其一生，全心全意，永不停息所有其它的路都是不完整的，是人的逃避方式是对大众理想的懦弱回归，是随波逐流，是对内心的恐惧听到这些声音，或许也能让你找到自我吧封面来源：溺水的船长2018.07.15",
+                  "status":0,
+                  "ordered":false,
+                  "trackNumberUpdateTime":1532790231520,
+                  "userId":43096902,
+                  "coverImgId":109951163446800499,
+                  "createTime":1531621061383,
+                  "adType":0,
+                  "playCount":557859,
+                  "name":"孤身化为林中燕」只为一人赏呢喃",
+                  "id":2315893920,
+                  "shareCount":63,
+                  "coverImgId_str":109951163446800499,
+                  "commentCount":55
+              },
+              "code":200
+          }
+        this.listDetail = details.result.tracks.map((item) => {
+          return createRecommendListSong(item)
+        })
+    },
+    mounted() {
+        if (this.miniFlag) return
+        const music = this.$refs.player // 音频所在对象
+        const musicBar = this.$refs.runbar // 颜色进度条所在对象
+        const musicWidth = this.$refs.runfatbar.offsetWidth // 底部进度条总宽
+
+        // 监听颜色进度条是否触摸拖动
+        musicBar.addEventListener('touchmove', (event) => {
+            const events = event.targetTouches[0].pageX // 获得触摸拖动的距离
+            if ((events / musicWidth) * 100 >= 100) return
+            musicBar.style.width = `${(events / musicWidth) * 100}%` // 计算进度条所在比例宽度
+            console.info((events / musicWidth) + ' musicBar.style.width')
+            music.pause() // 触摸拖动时停止播放
+        })
+
+        // 监听颜色进度条是否触摸拖动结束
+        musicBar.addEventListener('touchend', () => {
+            const touwidth = (musicBar.offsetWidth / musicWidth) // 计算进度条所在比例
+            music.currentTime = music.duration * touwidth // 通过所在比例赋值给音频应在的播放时间
+            music.play() // 根据播放时间开始播放
+            this.play = true // 更改播放暂停按钮为播放
+        })
+
+        // 这里顺便写的，适用于PC端。鼠标事件
+        musicBar.addEventListener('drag', (e) => {
+            const events = e.pageX
+            musicBar.style.width = `${(events / musicWidth) * 100}%`
+        })
+        musicBar.addEventListener('dragend', (e) => {
+            const events = e.pageX
+            musicBar.style.width = `${(events / musicWidth) * 100}%`
+            if (this.play) {
+                this.playMusic()
+            }
+        })
+    },
+    computed: {
+        bgStyle () {
+          let bag = JSON.parse(sessionStorage.getItem('picUrl'))
+          return `background-image: url(${bag})`
+      },
+      playCount () {
+          return 100 + '万'
+      }
+    },
+    filters: {
+        formatSecond(second = 0) {
+            second = second ? second : '0'
+            return realFormatSecond(second)
+        }
+    },
+    watch:{
+        currentTime(){//监听时间变化
+            this.percent = this.currentTime / this.currentTimeMaxTime
+        },
+        scrollY (newY) {
+          const percent = Math.abs(newY / this.imageHeight)
+          if (newY < (this.minTranslateY + RESERVED_HEIGHT - 20)) {
+            this.headerTitle = 'name'
+          } else {
+            this.headerTitle = '歌单'
+          }
+          if (newY < 0) {
+            this.$refs.header.style.background = `rgba(212, 68, 57, ${percent})`
+          } else {
+            this.$refs.header.style.background = `rgba(212, 68, 57, 0)`
+          }
+        }
+    },
+    methods: {
+        onEnded() {
+            /*
+             * 音频是否播放完
+             */
+            console.log('onEnded')
+            this.play = false
+        },
+        onLoadedmetadata(res) { //音频加载完
+            console.log('音频加载完')
+            this.currentTimeMaxTime = parseInt(res.target.duration)
+            this.audioState();
+            this.loading = false
+        },
+        onError() { //加载失败
+            console.log('onError-----')
+            this.loading = false
+        },
+        onTimeupdate(res) {
+            //console.log('timeupdate')
+            const musicBar = this.$refs.runbar // 颜色进度条所在对象
+            //musicBar.style.width = `${(stopTime / musicTime) * 100}%`
+            this.currentTime = res.target.currentTime
+            let sliderTimes = parseInt(this.currentTime / this.currentTimeMaxTime * 100)
+            //mini不需要进度条
+            if (this.miniFlag) return
+            musicBar.style.width = sliderTimes > 100 ? 100 : sliderTimes + 1 + '%'
+            //this.leftStyle.width = sliderTimes>100?100:sliderTimes+1 +'%'
+        },
+        // 点击进度条事件
+        playMusic(e) {
+            const music = this.$refs.player // 音频所在对象
+            const barWidth = e.pageX / this.$refs.runfatbar.offsetWidth // 计算点击位置相对父元素总宽的比例
+            this.$refs.runbar.style.width = `${barWidth * 100}%` // 进度条应所在的比例总宽
+            music.currentTime = music.duration * barWidth // 计算点击时应播放所在的时间
+            music.play() // 播放音频
+            this.play = true // 更改播放暂停按钮为播放
+        },
+        // 点击播放暂停按钮时间
+        audioState() {
+            this.play = !this.play // 更改播放暂停按钮状态
+            const music = this.$refs.player // 音频所在对象
+            if (this.play) {
+                music.play() // 播放音乐
+            } else {
+                music.pause() // 暂停音乐
+            }
+        },
+        // 切换歌曲按钮
+        switchAudio(value) {
+            if (value === 'top') {
+                this.audioHttp = 'http://www.egtch.com/t_works/Vuedata/Apologize (Timbaland Remix).mp3'
+            } else if (value === 'bottom') {
+                this.audioHttp = 'http://www.egtch.com/t_works/Vuedata/I Am You.mp3'
+            }
+            this.play = false // 播放按钮为暂停
+            this.$refs.runbar.style.width = 0 // 清空颜色进度条
+            this.loading = true
+            //this.$refs.yuanright.style.display = 'none' // 清空圆形颜色进度条
+            //this.$refs.yuanleft.style.display = 'none' // 清空圆形颜色进度条
+        },
+        showPlaylist() {
+
+        },
+        back() {
+            //收起全屏
+            this.currentShow = 'mini'
+            this.qpFlag = false
+        },
+        open() {
+            //显示全屏
+            this.currentShow = 'normal'
+            this.qpFlag = false
+        },
+        changeMiddle() {
+
+        },
+        format(interval) {
+            interval = interval | 0
+            let minute = interval / 60 | 0
+            let second = interval % 60
+            if (second < 10) {
+                second = '0' + second
+            }
+            return minute + ':' + second
+        },
+        percentChange(percent) {
+            const currentTime = this.currentTimeMaxTime * percent
+            this.currentTime = currentTime
+        },
+        percentChangeEnd(percent) {
+            const currentTime = this.currentTimeMaxTime * percent
+            console.log(currentTime)
+            this.$refs.player.currentTime = currentTime
+        },
+        next() {},
+        prev() {},
+        getFavoriteIcon() {},
+        changeMode(){},
+        goBack(){},
+        firstPlay() {
+            console.log('firstPlay')
+            this.$refs.player.play()
+        },
+        scroll (pos) {
+          this.scrollY = pos.y
+        },
+        selectItem (item, index) {
+
+          let payData = {
+            list: this.listDetail,
+            index: index
+          }
+          console.log(payData)
+          sessionStorage.setItem('payData',JSON.stringify(payData))
+          this.currentShow = 'normal'
+          this.qpFlag = false
+        }
+    },
+    components: {
+        ProgressBar,
+        Scroll,
+        SongList
+    }
+}
+</script>
+<style lang="scss">
+    // 颜色定义规范
+    $color-background: #F2F3F4;
+    $color-background-d: rgba(0, 0, 0, 0.3);
+    $color-highlight-background: rgb(253, 108, 98);
+    $color-dialog-background: rgb(204, 204, 204);
+    $color-theme: rgb(212, 68, 57);
+    $color-theme-l: rgb(241, 241, 241);
+    $color-theme-g: rgb(219, 219, 219);
+    $color-theme-d: rgba(19, 19, 19, 0.6);
+    $color-sub-theme: rgb(240, 116, 107);
+    $color-text: #2E3030;
+    $color-text-g: #757575;
+    $color-text-ggg: #c7c7c7;
+    $color-text-gg: rgb(219, 219, 219);
+    $color-text-l: rgb(241, 241, 241);
+    $color-text-lm: rgb(228, 228, 228);
+    $color-text-ll: rgba(255, 255, 255, 0.8);
+
+    //字体定义规范
+    $font-size-small-ss: 9px;
+    $font-size-small-s: 10px;
+    $font-size-small: 11px;
+    $font-size-small-x: 12px;
+    $font-size-medium: 14px;
+    $font-size-medium-x: 16px;
+    $font-size-large-s: 17px;
+    $font-size-large: 18px;
+    $font-size-large-x: 22px;
+    // 背景图片
+    @mixin bg-image($url) {
+        background-image: url($url + "@2x.png");
+        @media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3) {
+            background-image: url($url + "@3x.png");
+        }
+    }
+
+    // 不换行
+    @mixin no-wrap() {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    // 扩展点击区域
+    @mixin extend-click() {
+        position: relative;
+        &:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+        }
+    }
+    #app,
+    body,
+    html {
+        height: 100%;
+    }
+    .player-warp {
+        width: 100%;
+        height: 92%;
+        max-width: 720px;
+        margin: 0 auto;
+        background: url("../../assets/01bbda57a199780000012e7ede9fd1.jpg@2o.jpg") no-repeat center;
+        background-size: 100%;
+        position: relative;
+        top: 0;
+        left: 0;
+        .circleProgress_wrapper {
+            width: 200px;
+            height: 200px;
+            margin: 50px auto;
+            position: relative;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            overflow: hidden;
+            img {
+                width: 197px;
+                height: 197px;
+            }
+            img.run {
+                animation: run 10s linear infinite;
+                -moz-animation: run 10s linear infinite;
+                -webkit-animation: run 10s linear infinite;
+                -o-animation: run 10s linear infinite;
+            }
+        }
+        .audio-warp {
+            position: absolute;
+            width: 100%;
+            bottom: 16px;
+            left: 0;
+        }
+        .circleProgress {
+            width: 70px;
+            height: 70px;
+            border: 5px solid transparent;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+        }
+
+        .rightcircle {
+            border-top: 5px solid #9266f9;
+            border-right: 5px solid #9266f9;
+            right: 0;
+            transform: rotate(-135deg);
+            display: none;
+        }
+
+        .leftcircle {
+            border-bottom: 5px solid #9266f9;
+            border-left: 5px solid #9266f9;
+            left: 0;
+            transform: rotate(-135deg);
+            display: none;
+        }
+        .bar {
+            height: 30px;
+            line-height: 30px;
+            margin: 12px;
+            .progressbar {
+                width: 100%;
+                height: 6px;
+                background-color: #fff;
+                border-radius: 30px;
+                position: relative;
+            }
+
+            .greenbar {
+                width: 0;
+                height: 6px;
+                border-radius: 30px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-color: #9266f9;
+
+                .yuan {
+                    display: inline-block;
+                    padding: 8px;
+                    background-color: #9266f9;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: -5px;
+                    right: -8px;
+                }
+            }
+        }
+
+        .time-text {
+            display: inline-block;
+            width: 50%;
+            padding: 0 30px;
+            box-sizing: border-box;
+            color: #fff;
+        }
+
+        .right-time {
+            text-align: right;
+        }
+
+        .audio-btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .iconfont {
+            font-size: 40px;
+            display: inline-block;
+            margin-right: 20px;
+            vertical-align: middle;
+            color: #fff;
+        }
+        .iconfont.icon-zanting {
+            color: #9266f9;
+        }
+    }
+    @-webkit-keyframes run {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(1turn);
+        }
+    }
+
+    .player-warps {
+        .normal-player {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 150;
+            background: $color-background;
+            .background {
+                position: absolute;
+                left: -50%;
+                top: -50%;
+                width: 300%;
+                height: 300%;
+                z-index: -1;
+                opacity: 0.6;
+                filter: blur(30px);
+                .filter {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background: black;
+                    opacity: 0.6;
+                }
+                .filterR {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background: black;
+                    opacity: 0.4;
+                    &.filterR-enter-active,
+                    &.filterR-leave-active {
+                        transition: all 0.3s;
+                    }
+                    &.filterR-enter,
+                    &.filterR-leave-to {
+                        opacity: 0;
+                    }
+                    &.filterR-leave {
+                        opacity: 0.4;
+                    }
+                }
+            }
+            .top {
+                position: relative;
+                margin-bottom: 25px;
+                .back {
+                    position: absolute;
+                    top: 0;
+                    left: 6px;
+                    z-index: 50;
+                    .icon-angle-down {
+                        display: block;
+                        padding: 5px 9px;
+                        font-size: 20px;
+                        color: $color-theme-l;
+                    }
+                }
+                .title {
+                    width: 70%;
+                    margin: 0 auto;
+                    padding-top: 10px;
+                    line-height: 20px;
+                    text-align: center;
+                    @include no-wrap();
+                    font-size: $font-size-large;
+                    font-weight: bold;
+                    color: $color-text-l;
+                }
+                .subtitle {
+                    width: 70%;
+                    margin: 0 auto;
+                    line-height: 20px;
+                    text-align: center;
+                    @include no-wrap();
+                    font-size: $font-size-small-x;
+                    color: $color-text-l;
+                }
+            }
+            .middle {
+                display: flex;
+                align-items: center;
+                position: fixed;
+                width: 100%;
+                top: 80px;
+                bottom: 170px;
+                white-space: nowrap;
+                font-size: 0;
+                .middle-l {
+                    display: inline-block;
+                    vertical-align: top;
+                    position: relative;
+                    width: 100%;
+                    height: 0;
+                    padding-top: 80%;
+                    &.middleL-enter-active,
+                    &.middleL-leave-active {
+                        transition: all 0.3s;
+                    }
+                    &.middleL-enter,
+                    &.middleL-leave-to {
+                        opacity: 0;
+                    }
+                    .cd-wrapper {
+                        position: absolute;
+                        left: 10%;
+                        top: 0;
+                        width: 80%;
+                        height: 100%;
+                        .cd {
+                            width: 100%;
+                            height: 100%;
+                            box-sizing: border-box;
+                            border: 15px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 50%;
+                            &.play {
+                                animation: rotate 20s linear infinite;
+                            }
+                            &.pause {
+                                animation-play-state: paused;
+                            }
+                            .image {
+                                position: absolute;
+                                left: 0;
+                                top: 0;
+                                width: 100%;
+                                height: 100%;
+                                border-radius: 50%;
+                            }
+                        }
+                    }
+                }
+                .middle-r {
+                    display: inline-block;
+                    position: absolute;
+                    top: 0;
+                    vertical-align: top;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                    &.middleR-enter-active,
+                    &.middleR-leave-active {
+                        transition: all 0.2s;
+                    }
+                    &.middleR-enter,
+                    &.middleR-leave-to {
+                        opacity: 0;
+                    }
+                    .lyric-wrapper {
+                        width: 80%;
+                        margin: 0 auto;
+                        overflow: hidden;
+                        text-align: center;
+                        .text {
+                            line-height: 40px;
+                            color: $color-text-ggg;
+                            font-size: $font-size-medium;
+                            &.current {
+                                color: #FFF;
+                            }
+                        }
+                        .no-lyric {
+                            line-height: 40px;
+                            margin-top: 60%;
+                            color: $color-text-ggg;
+                            font-size: $font-size-medium;
+                        }
+                    }
+                }
+            }
+            .bottom {
+                position: absolute;
+                bottom: 50px;
+                width: 100%;
+                .progress-wrapper {
+                    display: flex;
+                    align-items: center;
+                    width: 80%;
+                    margin: 0 auto;
+                    padding: 10px 0;
+                    .time {
+                        color: $color-text-l;
+                        font-size: $font-size-small;
+                        flex: 0 0 30px;
+                        line-height: 30px;
+                        width: 30px;
+                        &.time-l {
+                            text-align: left;
+                        }
+                        &.time-r {
+                            text-align: right;
+                            color: $color-text-gg;
+                        }
+                    }
+                    .progress-bar-wrapper {
+                        flex: 1;
+                    }
+                }
+                .operators {
+                    display: flex;
+                    align-items: center;
+                    .iconfont{
+                        margin-right: 0;
+                    }
+                    .icon {
+                        flex: 1;
+                        color: $color-theme-l;
+                        &.disable {
+                            color: $color-theme;
+                        }
+                        i {
+                            font-size: 30px;
+                        }
+                        .mode {
+                            font-size: 25px;
+                        }
+                        &.i-left {
+                            text-align: right;
+                        }
+                        &.i-center {
+                            padding: 0 20px;
+                            text-align: center;
+                            i {
+                                font-size: 40px;
+                            }
+                            i.icon-zanting{
+                                color: #fff;
+                            }
+                        }
+                        &.i-right {
+                            text-align: left;
+                        }
+                        .icon-like {
+                            color: $color-sub-theme;
+                        }
+                    }
+                }
+            }
+            &.normal-enter-active,
+            &.normal-leave-active {
+                transition: all 0.4s;
+                .bottom,
+                .top {
+                    transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
+                }
+            }
+            &.normal-enter,
+            &.normal-leave-to {
+                opacity: 0;
+            }
+        }
+        .mini-player {
+            display: flex;
+            align-items: center;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            z-index: 180;
+            width: 100%;
+            height: 60px;
+            background: #fff;
+            &.mini-enter-active,
+            &.mini-leave-active {
+                transition: all 0.4s;
+            }
+            &.mini-enter,
+            &.mini-leave-to {
+                opacity: 0;
+            }
+            .icon {
+                flex: 0 0 40px;
+                width: 40px;
+                padding: 0 10px 0 20px;
+                img {
+                    border-radius: 50%;
+                    &.play {
+                        animation: rotate 10s linear infinite;
+                    }
+                    &.pause {
+                        animation-play-state: paused;
+                    }
+                }
+            }
+            .text {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                flex: 1;
+                overflow: hidden;
+                .name {
+                    margin-bottom: 2px;
+                    line-height: 14px;
+                    @include no-wrap();
+                    font-size: $font-size-medium;
+                    color: $color-text;
+                }
+                .desc {
+                    @include no-wrap();
+                    font-size: $font-size-small;
+                    color: $color-text;
+                }
+            }
+            .control {
+                flex: 0 0 30px;
+                width: 30px;
+                padding: 0 10px;
+                .icon-pause-mini,
+                .icon-play-mini,
+                .icon-playlist,
+                .iconfont {
+                    font-size: 30px;
+                    color: $color-theme-d;
+                }
+                .iconfont {
+                    position: relative;
+                    left: -5px;
+                    top: -3px;
+                }
+                .fa-play {
+                    color: $color-theme-d;
+                    font-size: 14px;
+                    position: absolute;
+                    left: 12px;
+                    top: 8.5px;
+                }
+                .fa-stop {
+                    color: $color-theme-d;
+                    font-size: 12px;
+                    position: absolute;
+                    left: 11px;
+                    top: 10px;
+                }
+            }
+        }
+        .music-list {
+          position: fixed;
+          z-index: 1000;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          background: $color-background;
+          .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 44px;
+            color: #fff;
+            z-index: 100;
+            .back {
+              position: absolute;
+              top: 0;
+              left: 4px;
+              .fa-angle-left {
+                padding: 5px 10px;
+                font-size: 30px;
+              }
+            }
+            .text {
+              position: absolute;
+              left: 38px;
+              line-height: 44px;
+              font-size: $font-size-medium-x;
+              @include no-wrap()
+            }
+          }
+          .list {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            background: $color-background;
+            .music-list-wrapper {
+              .bg-image {
+                position: relative;
+                width: 100%;
+                height: 0;
+                padding-top: 75%;
+                transform-origin: top;
+                background-size: cover;
+                background-position: 0 30%;
+                .filter {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background: black;
+                  opacity: 0.2;
+                }
+                .text {
+                  position: absolute;
+                  width: 80%;
+                  height: 40px;
+                  bottom: 50px;
+                  left: 15px;
+                  color: #fff;
+                  .play-count {
+                    position: absolute;
+                    bottom: -16px;
+                    font-size: $font-size-small;
+                  }
+                  .list-title {
+                    position: absolute;
+                    bottom: 0;
+                    font-size: $font-size-medium-x;
+                    line-height: 18px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                  }
+                }
+              }
+              .song-list-wrapper {
+                padding: 41px 0 20px 0;
+                border-radius: 10px;
+                position: relative;
+                top:-20px;
+                background: $color-background;
+                .sequence-play {
+                  position: absolute;
+                  // left: 8;
+                  top: 0px;
+                  display: flex;
+                  align-items: center;
+                  width: 100%;
+                  height: 40px;
+                  padding-left: 16px;
+                  border-bottom: 1px solid rgb(228, 228, 228);
+                  .iconfont {
+                    font-size: 18px;
+                    color: $color-text;
+                    padding-right: 14px;
+                  }
+                  .text {
+                    font-size: $font-size-medium-x;
+                  }
+                  .count {
+                    font-size: $font-size-medium;
+                    color: $color-text-g;
+                  }
+                }
+              }
+            }
+          }
+          .loading-content {
+            position: fixed;
+            width: 100%;
+            top: 70%;
+            transform: translateY(-50%);
+          }
+        }
+    }
+    @keyframes rotate {
+        0% {
+            transform: rotate(0);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
