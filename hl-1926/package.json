@@ -1,28 +1,44 @@
 {
-  "name": "hl-1926",
+  "name": "vue-admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "core-js": "^2.6.5",
-    "vue": "^2.6.6",
-    "vue-class-component": "^6.0.0",
-    "vue-property-decorator": "^8.0.0",
-    "vue-router": "^3.0.1",
-    "vue-skeleton-webpack-plugin": "^1.2.2"
+    "eslint-plugin-html": "^5.0.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "vue": "^2.5.17",
+    "vue-clipboard2": "^0.2.1",
+    "vue-lazyload": "^1.2.6",
+    "vue-router": "^3.0.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.5.5",
-    "@vue/cli-plugin-typescript": "^3.5.5",
-    "@vue/cli-service": "^3.5.5",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.1.0",
-    "typescript": "^3.2.1",
-    "vue-template-compiler": "^2.5.21"
+    "@vue/cli-plugin-babel": "^3.2.1",
+    "@vue/cli-plugin-eslint": "^3.2.1",
+    "@vue/cli-service": "^3.2.1",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0-0",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
   },
   "postcss": {
     "plugins": {
