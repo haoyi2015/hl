@@ -70,19 +70,19 @@
 		</div>
 	</div>
 	<!--倒计时-->
-	<div class="se-kl-warp-right" v-if="dataObjItem>=1">
+	<div class="se-kl-warp-right" v-if="dataObjItem[0]>=1">
 		<div class="se-kl">
-			<div class="se-cn">倒计时</div>
+			<!-- <div class="se-cn">倒计时</div>
 			<div class="se-en">COUNT DOWN</div>
 			<i class="se-io"></i>
 			<div class="se-info">
 				{{ date }}<br>
 				距离到时还剩
-			</div>
+			</div> -->
 			<div class="se-count">
-				<div class="se-day"></div>
+				<!-- <div class="se-day"></div> -->
 				<!-- <div class="se-hour"><span class="se-txt">{{ dataObjItem[0] }}</span></div> -->
-				<div class="se-min"><span class="se-txt">{{ dataObjItem }}天</span></div>
+				<div class="se-min"><span class="se-txt">{{ dataObjItem[0] }}天</span></div>
 				<!-- <div class="se-sec"><span class="se-txt">{{ dataObjItem[2] }}</span></div> -->
 			</div>
 		</div>
@@ -102,11 +102,11 @@
           <span>you</span>
         </div>
       </div>
-      <div class="cont-dec">遇见你真好，真的很好...我们都要好好的</div>
+      <div class="cont-dec">一路走来，谢谢你（在那个未知的世界）的陪伴，终于等到你，还好没放弃</div>
     </div>
 	<!--进入主页-->
 	<div id="boxes">
-		<a href="/blog">
+		<a href="#/blog">
 			<div style="--color: #f44336">
 			</div>
 		</a>
@@ -149,7 +149,7 @@
 	function tow(n) {
 		return n >= 0 && n < 10 ? '0' + n : '' + n;
 	}
-import { getBeforeDate } from '@/util/time'
+import { getDistanceSpecifiedTime } from '@/util/time'
 export default {
 	data() {
 		return {
@@ -168,7 +168,7 @@ export default {
 			w: document.documentElement.clientWidth,
 			h: document.documentElement.clientHeight,
 			tops: document.documentElement.clientHeight/2,
-			dataObjItem: getBeforeDate('2020-03-01'),
+			dataObjItem: getDistanceSpecifiedTime('2020/03/01'),
 			bodyImgWh:`width:${document.documentElement.clientWidth}px;height:${window.screen.height}px`,
 			bodyWh:`width:${document.documentElement.clientWidth}px;height:${document.documentElement.clientHeight}px`
 		};
@@ -182,7 +182,6 @@ export default {
 				ch = window.screen.height,
 				iw = bg_img.width,
 				ih = bg_img.height;
-				console.log(ih,'ih')
 
 			bg.style.width = cw + "px";
 			bg.style.height = ch + "px";
@@ -644,11 +643,21 @@ export default {
 	.se-kl {
 		width: 190px;
 		height: 275px;
-		background-color: #e83632;
+		/* background-color: #e83632; */
+		background: url('../assets/images/times-bg.png') no-repeat;
 		margin: 0 auto;
 		position: relative;
 	}
-
+	@keyframes bounce {
+		0% {
+			transform: translate3d(0, 0, 0);
+			text-shadow: rgba(255, 255, 255, 0.4) 0 0 0.05em;
+		}
+		100% {
+			transform: translate3d(0, -1em, 0);
+			text-shadow: rgba(255, 255, 255, 0.4) 0 1em 0.35em;
+		}
+	}
 	.se-cn {
 		position: absolute;
 		top: 20px;
@@ -692,11 +701,11 @@ export default {
 
 	.se-count {
 		position: absolute;
-		top: 212px;
-		/* left: 30px; */
-		left: 50%;
+		bottom: -10px;
+		right: 22px;
 		height: 40px;
-		transform: translateX(-50%);
+		/* transform: translateX(-50%); */
+		animation: bounce 0.75s cubic-bezier(0.05, 0, 0.2, 1) infinite alternate;
 	}
 
 	.se-day {
@@ -708,13 +717,13 @@ export default {
 	.se-sec {
 		position: relative;
 		background-color: #2f3430;
-		min-width: 40px;
+		width: 70px;
 		height: 40px;
 		float: left;
 		text-align: center;
 		line-height: 40px;
 		margin-right: 5px;
-		padding: 0 10px;
+		border-radius: 50%;
 	}
 
 	.se-txt {

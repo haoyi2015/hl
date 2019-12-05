@@ -93,8 +93,23 @@ const getBeforeDate = ((n) => {
         return chs;
     }
 })
+const getDistanceSpecifiedTime = ((dateTime) => {
+    // 指定日期和时间
+    let EndTime = new Date(dateTime);
+    // 当前系统时间
+    let NowTime = new Date();
+    let t = EndTime.getTime() - NowTime.getTime();
+    let d = Math.floor(t / 1000 / 60 / 60 / 24);
+    let h = Math.floor(t / 1000 / 60 / 60 % 24);
+    let m = Math.floor(t / 1000 / 60 % 60);
+    let s = Math.floor(t / 1000 % 60);
+    let html = d + " 天" + h + " 时" + m + " 分" + s + " 秒";
+    console.log([d, h, m, s][0])
+    return [d, h, m, s]
+})
 export {
     tiemDate,
     dayTime,
-    getBeforeDate
+    getBeforeDate,
+    getDistanceSpecifiedTime
 }

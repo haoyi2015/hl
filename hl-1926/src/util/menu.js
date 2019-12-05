@@ -1,6 +1,6 @@
 let hedMenu = [{
         'name': '首页',
-        'url': '/home'
+        'url': '#/home'
     },
     // {
     //     'name': '社交',
@@ -8,7 +8,7 @@ let hedMenu = [{
     // },
     {
         'name': '博客',
-        'url': '/blog'
+        'url': '#/blog'
     },
     // {
     //     'name': 'us记录👣',
@@ -30,11 +30,11 @@ let hedMenu = [{
     },*/
     {
         'name': '实例',
-        'url': '/content'
+        'url': '#/content'
     },
     {
         'name': 'web前端导航',
-        'url': '/nav-item'
+        'url': '#/nav-item'
     },
     {
         'name': '关于个人',

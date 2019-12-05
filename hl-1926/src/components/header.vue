@@ -127,7 +127,7 @@ export default {
         return {
             searchValue:'',
             hedMenu: hedMenu||[],
-            path: this.$route.path
+            path: '#'+this.$route.path
         }
     },
     methods: {

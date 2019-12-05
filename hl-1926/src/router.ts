@@ -40,9 +40,6 @@ Vue.use(Router)
 
 
 export default new Router({
-  history: false,
-  hashbang: true,
-  mode: 'history',//去除#
   routes: [
     {
       path: '/',
