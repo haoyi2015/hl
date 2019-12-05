@@ -1,0 +1,43 @@
+{
+	"msg": "处理成功",
+	"code": 0,
+	"data": {
+		"goods_id": "5803",
+		"share_img_url": "http://oss3.lanlanlife.com/d915852d33047364d1f509ad9b98fa35_1000x700.png",
+		"img_list": [
+			"http://oss2.lanlanlife.com/0180b25edfbe8406f37780245d98bb9f_800x800.jpg@!1-500-80-jpg",
+			"http://oss1.lanlanlife.com/b1f351f46508c7efcc80277295883933_800x800.jpg",
+			"http://oss.lanlanlife.com/4c37535e35e1b0789b2bb21824003b33_800x800.jpg",
+			"http://oss2.lanlanlife.com/6c607eb51f7a7727145509c3f919ea57_800x800.jpg",
+			"http://oss2.lanlanlife.com/ee8f08ef6d70f8dcab25bb582a931915_800x800.jpg",
+			"http://oss.lanlanlife.com/71b00d4dae6985663ed6624f1b482c5c_800x800.jpg"
+		],
+		"detail_images": [
+			"http://oss2.lanlanlife.com/94e403f02d72cdbbcaca54a2e69be403%210_813x750.jpg",
+			"http://oss1.lanlanlife.com/4c65c69b2df5232606a422d6ac5f3805%210_813x750.jpg",
+			"http://oss.lanlanlife.com/6dfbecfe13f95998f498c7db9af7af1b%210_812x750.jpg",
+			"http://oss1.lanlanlife.com/e9bff5e75618c6c9d56a82f8b05efca0%210_813x750.jpg",
+			"http://oss3.lanlanlife.com/06974b7fb656c7ff8cf3439c99c488f2%210_813x750.jpg",
+			"http://oss1.lanlanlife.com/3b6bfb51cad9b0e83c4e78a29bb7ab53%210_813x750.jpg",
+			"http://oss.lanlanlife.com/1252e62680d64ad8845e22eb5289022f%210_811x750.jpg",
+			"http://oss2.lanlanlife.com/f396750f65911e1875c7d9803c491cce%210_1000x750.jpg",
+			"http://oss.lanlanlife.com/1e679164bb5ad2fa73238051b7e693e5%210_761x750.jpg",
+			"http://oss1.lanlanlife.com/6ed93f05fee1c2f8f306d8e0f22577c2%210_750x750.jpg",
+			"http://oss1.lanlanlife.com/1cefc2f9feb3a2a1e24f46ed54970d95%210_896x750.jpg",
+			"http://oss.lanlanlife.com/0f3549ab30d034dc124f92db4bba0bab%210_489x750.jpg",
+			"http://oss1.lanlanlife.com/5890604d956f2e879bf2c4b197261fc4%210_1000x750.jpg",
+			"http://oss1.lanlanlife.com/781986c6c4f9dedcd186bb2242600df4%210_933x750.jpg"
+		],
+		"title": "日式家用厨房用品防漏油罐玻璃油瓶酱油瓶醋瓶大号装油瓶调味油壶",
+		"is_tmall": false,
+		"is_jhs": false,
+		"origin_price": "14.90",
+		"price": "9.90",
+		"sales_num": "4683",
+		"prd_code": null,
+		"voucher_price": "5.00",
+		"voucher_date": "2018.04.24-2018.04.28",
+		"recommend_str": "【金冠品质】简约透明，无铅玻璃材质，调料一目了然，倾倒自动开盖设计，干净卫生，光洁不油腻，打造你的美丽厨房！【赠运险费】\n",
+		"buy_url": "https://uland.taobao.com/coupon/edetail?activityId=9e6d2c495bf4459aa2972dca111f66fa&itemId=559361914780&mm_112040233_40946019_167804789"
+	}
+}
