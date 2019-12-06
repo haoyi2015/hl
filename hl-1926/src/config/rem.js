@@ -18,7 +18,8 @@
 //designWidth:设计稿的实际宽度值，需要根据实际设置
 //maxWidth:制作稿的最大宽度值，需要根据实际设置
 //这段js的最后面有两个参数记得要设置，一个为设计稿实际宽度，一个为制作稿最大宽度，例如设计稿为750，最大宽度为750，则为(750,750)
-;(function(win, lib) {
+;
+(function(win, lib) {
     var doc = win.document;
     var docEl = doc.documentElement;
     var metaEl = doc.querySelector('meta[name="viewport"]');
@@ -27,7 +28,7 @@
     var scale = 0;
     var tid;
     var flexible = lib.flexible || (lib.flexible = {});
-    
+
     if (metaEl) {
         console.warn('将根据已有的meta标签来设置缩放比例');
         var match = metaEl.getAttribute('content').match(/initial\-scale=([\d\.]+)/);
@@ -42,11 +43,11 @@
             var maximumDpr = content.match(/maximum\-dpr=([\d\.]+)/);
             if (initialDpr) {
                 dpr = parseFloat(initialDpr[1]);
-                scale = parseFloat((1 / dpr).toFixed(2));    
+                scale = parseFloat((1 / dpr).toFixed(2));
             }
             if (maximumDpr) {
                 dpr = parseFloat(maximumDpr[1]);
-                scale = parseFloat((1 / dpr).toFixed(2));    
+                scale = parseFloat((1 / dpr).toFixed(2));
             }
         }
     }
@@ -57,9 +58,9 @@
         var devicePixelRatio = win.devicePixelRatio;
         if (isIPhone) {
             // iOS下，对于2和3的屏，用2倍的方案，其余的用1倍方案
-            if (devicePixelRatio >= 3 && (!dpr || dpr >= 3)) {                
+            if (devicePixelRatio >= 3 && (!dpr || dpr >= 3)) {
                 dpr = 3;
-            } else if (devicePixelRatio >= 2 && (!dpr || dpr >= 2)){
+            } else if (devicePixelRatio >= 2 && (!dpr || dpr >= 2)) {
                 dpr = 2;
             } else {
                 dpr = 1;
@@ -85,10 +86,10 @@
         }
     }
 
-    function refreshRem(){
+    function refreshRem() {
         var width = docEl.getBoundingClientRect().width;
         if (width / dpr > 540) {
-            width = 540 * dpr;
+            width = 480 * dpr;
         }
         var rem = width / 10;
         console.log(width)
@@ -139,4 +140,4 @@
  * 1.复制上面这段代码到你的页面的头部的script标签的最前面。
  * 2.根据设计稿大小，调整里面的最后两个参数值。
  * 3.使用1rem=75px转换你的设计稿的像素，例如设计稿上某个块是100px*300px,换算成rem则为.075rem*4rem。
-*/
+ */

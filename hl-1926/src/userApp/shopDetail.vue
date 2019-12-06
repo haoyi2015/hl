@@ -33,6 +33,7 @@
     .shop-img{
         .px2rem(height,560);
         background:rgba(249,249,249,1);
+        overflow: hidden;
     }
     .shop-jg{
         .px2rem(font-size,48);
