@@ -57,11 +57,11 @@ export default {
                 }
             ],
             images: [
-                "http://img.ishequ360.com/images/test/banner1@1x.jpeg",
-                "http://img.ishequ360.com/images/test/banner6@1x.jpeg",
-                "http://img.ishequ360.com/images/test/banner3@1x.jpeg",
-                "http://img.ishequ360.com/images/test/banner4@1x.jpeg",
-                "http://img.ishequ360.com/images/test/banner5@1x.jpeg",
+                "http://chzflive.caihome.cn/web/o_1c7390v9q1al1rak17g2v3uhc438?x-oss-process=image/resize,m_fill,h_240,w_320",
+            "http://chzflive.caihome.cn/web/o_1c7390v9q1al1rak17g2v3uhc438?x-oss-process=image/resize,m_fill,h_240,w_320",
+            "http://chzflive.caihome.cn/web/o_1c7390v9q1al1rak17g2v3uhc438?x-oss-process=image/resize,m_fill,h_240,w_320",
+            "http://chzflive.caihome.cn/web/o_1c7390v9q1al1rak17g2v3uhc438?x-oss-process=image/resize,m_fill,h_240,w_320",
+            "http://chzflive.caihome.cn/web/o_1c7390v9q1al1rak17g2v3uhc438?x-oss-process=image/resize,m_fill,h_240,w_320",
             ],
             active: 0,
             options: {

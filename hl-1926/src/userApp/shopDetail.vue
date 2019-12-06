@@ -4,7 +4,7 @@
             <img src="../assets/userApp/user_slices/user-icon.jpg" alt="">
         </div>
         <div class="shop-jg m-l-30">
-            <span>800<font>音乐石</font></span>
+            <span>800<font>奖励值</font></span>
         </div>
         <div class="shop-title m-t-20 m-l-30 m-r-30">
             瑞士军刀双肩包的瑞士军刀双肩包的瑞士军刀双肩包的瑞士军刀双肩包的瑞整个标题限制字数六十四个字
@@ -26,6 +26,9 @@
         font-family:PingFangHK-Regular;
         font-weight:400;
         color:rgba(255,195,151,1);
+    }
+    .shop-detail{
+        background: #fff;
     }
     .shop-img{
         .px2rem(height,560);

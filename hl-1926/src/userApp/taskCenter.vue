@@ -3,7 +3,7 @@
         <header class="hed-warp">
             <img src="../assets/userApp/user_slices/user-icon.jpg" alt="">
             <button>
-                签到领音乐石
+                签到领奖励
             </button>
         </header>
         <div class="tui-list m-l-30 m-r-30">
@@ -44,6 +44,9 @@
         font-family:PingFangHK-Regular;
         font-weight:400;
         color:rgba(255,195,151,1);
+    }
+    .user-music{
+        background: #fff;
     }
     .hed-warp{
         .px2rem(height,276);

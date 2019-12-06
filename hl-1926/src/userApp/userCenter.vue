@@ -1,6 +1,6 @@
 <template>
     <section class="user-center p-l-30 p-r-30">
-        <header class="user-hed m-t-22">
+        <header class="user-hed p-t-22">
             <div class="user-img">
                 <img src="../assets/userApp/user_slices/user-icon.jpg" alt="">
             </div>
@@ -24,7 +24,7 @@
                 <span>1大数据</span>
             </div>
         </div>
-        <div class="title-h1 m-l-10 m-t-50">我的音乐石</div>
+        <div class="title-h1 m-l-10 m-t-50">我的快捷入口</div>
         <div class="mu-list">
             <div class="mu-item m-l-15" @click="setMusic">
                 <p><img src="../assets/userApp/user_slices/ic_yinyueshi@2x.png" alt=""></p>
@@ -134,6 +134,7 @@
     .user-center{
         max-width: 540px;
         margin: 0 auto;
+        background: #fff;
     }
     .user-hed{
         .px2rem(height,190);

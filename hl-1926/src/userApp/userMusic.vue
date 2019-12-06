@@ -3,10 +3,10 @@
         <header class="hed-warp">
             <img src="../assets/userApp/user_slices/user-icon.jpg" alt="">
             <button>
-                签到领音乐石
+                签到领音奖励
             </button>
         </header>
-        <div class="title-h1 m-l-10 m-t-50">我的音乐石</div>
+        <div class="title-h1 m-l-10 m-t-50">我的奖励</div>
         <div class="tui-list m-l-30 m-r-30">
             <ul>
                 <li class="p-t-38 p-b-38">
@@ -53,7 +53,7 @@
         <div class="shop-list p-b-50">
             <ul>
                 <li class="m-l-28 m-r-26">
-                    <div class="imgs">
+                    <div class="imgs-list">
                         <img src="../assets/userApp/shop/user-icon.jpg" alt="">
                     </div>
                     <div class="title-name">
@@ -64,7 +64,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="imgs">
+                    <div class="imgs-list">
                         <img src="../assets/userApp/shop/user-icon.jpg" alt="">
                     </div>
                     <div class="title-name">
@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="m-l-28 m-r-26">
-                    <div class="imgs">
+                    <div class="imgs-list">
                         <img src="../assets/userApp/shop/user-icon.jpg" alt="">
                     </div>
                     <div class="title-name">
@@ -86,7 +86,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="imgs">
+                    <div class="imgs-list">
                         <img src="../assets/userApp/shop/user-icon.jpg" alt="">
                     </div>
                     <div class="title-name">
@@ -97,7 +97,7 @@
                     </div>
                 </li>
                 <li class="m-l-28 m-r-26">
-                    <div class="imgs">
+                    <div class="imgs-list">
                         <img src="../assets/userApp/shop/user-icon.jpg" alt="">
                     </div>
                     <div class="title-name">
@@ -108,7 +108,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="imgs">
+                    <div class="imgs-list">
                         <img src="../assets/userApp/shop/user-icon.jpg" alt="">
                     </div>
                     <div class="title-name">
@@ -129,6 +129,9 @@
         font-family:PingFangHK-Regular;
         font-weight:400;
         color:rgba(255,195,151,1);
+    }
+    .user-music{
+        background: #fff;
     }
     .hed-warp{
         .px2rem(height,540);

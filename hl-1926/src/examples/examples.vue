@@ -1,132 +1,336 @@
 <template>
     <section class="examples-warp">
         <div class="top-logo">
-            <!-- <img src="@/assets/img/vippl-logo.png" alt=""> -->
+            <!-- <img src="@/assets/img/hl-logo.png" alt=""> -->
             <div class="logo-dec">版本 v1.0</div>
         </div>
+        <div class="had-page">简单实列</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/about-demo">
+                    关于App信息
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">个人管理中心通用页面</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/user-info">
+                    个人信息H5
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">个人信息通用页面</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/user-center">
+                    H5个人中心集合
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">个人集合管理中心通用页面</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/user-music">
+                    H5用户信息
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">个人集合管理中心通用页面</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/shop-detail">
+                    商品信息详情
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">商品信息详情通用页面</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/task-center">
+                    任务列表
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">商品任务列表通用页面</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/shop-station">
+                    商品图片列表
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">商品图片列表通用页面</div>
+        </div>
         <div class="had-page">JS弹窗操作</div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="openMini">mini弹窗</div>
-            <div class="vippl-cell__ft">显示位置在屏幕中间</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="openMini">mini弹窗</div>
+            <div class="hl-cell__ft">显示位置在屏幕中间</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="openBig">big全屏弹窗</div>
-            <div class="vippl-cell__ft">显示位置在全屏中间</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="openBig">big全屏弹窗</div>
+            <div class="hl-cell__ft">显示位置在全屏中间</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="openToast">全局Toast提示</div>
-            <div class="vippl-cell__ft">支持 [top,center,bottom]位置</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="openToast">全局Toast提示</div>
+            <div class="hl-cell__ft">支持 [top,center,bottom]位置</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="openLoading">全局Loading提示</div>
-            <div class="vippl-cell__ft">显示位置在全屏中间</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="openLoading">全局Loading提示</div>
+            <div class="hl-cell__ft">显示位置在全屏中间</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="openPopup">全局popup层</div>
-            <div class="vippl-cell__ft">支持 [top,right,bottom,left]位置</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="openPopup">全局popup层</div>
+            <div class="hl-cell__ft">支持 [top,right,bottom,left]位置</div>
+        </div>
+        <div class="had-page">弹框相关</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/alert">
+                    alert
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">alert提示</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/confirm">
+                    confirm
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">confirm确认框</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/toast">
+                    toast
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">toast提示框</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/popup">
+                    popup
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">popup浮层</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/actionsheet">
+                    actionsheet
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">actionsheet菜单选择器</div>
         </div>
         <div class="had-page">列选择器</div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="showPicker0">多列选择器</div>
-            <div class="vippl-cell__ft">显示位置在全屏底部</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="showPicker0">多列选择器</div>
+            <div class="hl-cell__ft">显示位置在全屏底部</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="showPicker1">两级联级选择器</div>
-            <div class="vippl-cell__ft">显示位置在全屏底部</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="showPicker1">两级联级选择器</div>
+            <div class="hl-cell__ft">显示位置在全屏底部</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="showPicker4">省市区选择器</div>
-            <div class="vippl-cell__ft">显示位置在全屏底部</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="showPicker4">省市区选择器</div>
+            <div class="hl-cell__ft">显示位置在全屏底部</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="showPicker2">时间(内置)--时分秒</div>
-            <div class="vippl-cell__ft">显示位置在全屏底部</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="showPicker2">时间(内置)--时分秒</div>
+            <div class="hl-cell__ft">显示位置在全屏底部</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="showPicker3">日期(内置)--年月日</div>
-            <div class="vippl-cell__ft">显示位置在全屏底部</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="showPicker3">日期(内置)--年月日</div>
+            <div class="hl-cell__ft">显示位置在全屏底部</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/vue-picker">
+                    省市区，时间选择集合
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">移动端省市区，时间选择集合</div>
         </div>
         <div class="had-page">跑马灯相关</div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd" @click="transverse">纵向跑马灯</div>
-            <div class="vippl-cell__ft">显示位置在全屏底部</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd" @click="transverse">纵向跑马灯</div>
+            <div class="hl-cell__ft">显示位置在全屏底部</div>
         </div>
         <div class="had-page">图片操作</div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/broadcast">
                     图片预览
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">图片列表，大图预览，懒加载</div>
+            <div class="hl-cell__ft">图片列表，大图预览，懒加载</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/img-lary">
                     图片列表
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">带懒加载和点击放大查看</div>
+            <div class="hl-cell__ft">带懒加载和点击放大查看</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/drag-list">
                     图片拖动&缩放
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">图片位置拖动，大小缩放</div>
+            <div class="hl-cell__ft">图片位置拖动，大小缩放</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/swiper-demo">
                     轮播图
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">怎么使用可参考此实例</div>
+            <div class="hl-cell__ft">怎么使用可参考此实例</div>
         </div>
-        <div class="had-page">表单选择器</div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="had-page">表单库</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/checkbox">
-                    选项框
+                    自定义（单选，多选）
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">可配置多选，单选</div>
+            <div class="hl-cell__ft">可配置多选，单选</div>
+        </div><div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/limit-textarea">
+                    文本框字数限制／截取
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">文本框字数限制／截取</div>
         </div>
         <div class="had-page">导航</div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/tab-slider">
                     tab选项框
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">可点击可滑动tab切换</div>
+            <div class="hl-cell__ft">可点击可滑动tab切换</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/pull-down">
+                    vue2.0 移动端，下拉刷新，上拉加载更多
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">下拉刷新，上拉加载更多</div>
         </div>
         <div class="had-page">城市选择器</div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/index-list">
                     字母选择器
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">A-Z 城市选择</div>
+            <div class="hl-cell__ft">A-Z 城市选择</div>
         </div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/mint-index-list">
                     字母选择器
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">A-Z 城市选择（旧版本基于mint-ui）</div>
+            <div class="hl-cell__ft">A-Z 城市选择（旧版本基于mint-ui）</div>
         </div>
         <div class="had-page">布局相关</div>
-        <div class="vippl-cell vippl-cells">
-            <div class="vippl-cell__bd">
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
                 <router-link to="/hed-bottom">
                     布局盒子
                 </router-link>
             </div>
-            <div class="vippl-cell__ft">（头部和底部固定中间滚动）可参考此实例</div>
+            <div class="hl-cell__ft">（头部和底部固定中间滚动）可参考此实例</div>
+        </div>
+        <div class="had-page">移动端自定义键盘</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/pay">
+                    移动端支付密码输入
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">（移动端支付密码输入) 可参考此实例</div>
+        </div>
+        <div class="had-page">播放器（PC&H5）</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/vue-player">
+                    播放器（PC）
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">（播放器（PC电脑端）) 可参考此实例</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/phone-player">
+                    播放器（移动端）
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">播放器（移动端） 可参考此实例</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/h5-player">
+                    播放器（移动端粗略版）
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">播放器（移动端） 可参考此实例</div>
+        </div>
+        <div class="had-page">其他</div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/progress">
+                    滑动进度条
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">可拖动和滑动</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/ver-slider">
+                    简单滑块
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">可拖动滑块验证</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/h5-slider">
+                    左右拉动滑块
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">可左右拉动滑块</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/digital-beat">
+                    数字跳动累加
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">数字动画</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/slider-box">
+                    滑块拖动取值
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">滑块拖动取值</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/clipboard">
+                    文本复制
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">可实现文本复制</div>
         </div>
         <!--modal相关-->
         <section>
@@ -245,14 +449,22 @@
     .examples-warp{
         // max-width: 750px;
         margin: 0 auto;
+        background: #fff;
         .had-page{
-            background-color: #ededed;
-            font-size: .5rem;
-            padding: .5rem .35rem;
-            display: block;
-            line-height: 1;
+            margin-bottom: 16px;
             overflow: hidden;
-            font-weight: bold;
+            border-radius: 6px;
+            box-shadow: 0 1px 5px #ebedf0;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 40px;
+            border-radius: 2px;
+            background: #fff;
+            padding: 3px 12px;
+            border-radius: 3px;
         }
         .top-logo{
             text-align: center;
@@ -270,8 +482,9 @@
                 padding: .14rem 0;
             }
         }
-        .vippl-cell {
-            padding: 10px 15px;
+        .hl-cell {
+            padding: 8px 15px;
+            padding-top: 5px;
             position: relative;
             display: -webkit-box;
             display: -webkit-flex;
@@ -280,27 +493,28 @@
             -webkit-align-items: center;
             align-items: center;
         }
-        .vippl-cell__bd {
+        .hl-cell__bd {
             -webkit-box-flex: 1;
             -webkit-flex: 1;
             flex: 1;
-            font-size: .36rem;
+            color: #323233;
+            font-size: 14px;
             font-family:SFProDisplay-Regular;
-            font-weight:600;
-            color:rgba(74,74,74,1);
-            line-height:32px;
+            line-height:28px;
+            padding-left: 10px;
+            font-weight: 500;
             a{
                 color:rgba(74,74,74,1);
             }
         }
-        .vippl-cell__ft {
+        .hl-cell__ft {
             padding-right: 13px;
             position: relative;
             text-align: right;
             color: #808080;
-            font-size: 0.3rem;
+            font-size: 13px;
         }
-        .vippl-cell__ft:after {
+        .hl-cell__ft:after {
             content: " ";
             display: inline-block;
             height: 6px;
@@ -317,7 +531,7 @@
             margin-top: -4px;
             right: 2px;
         }
-        .vippl-cells:after {
+        .hl-cells:after {
             content: " ";
             position: absolute;
             left: 0;

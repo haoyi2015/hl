@@ -76,6 +76,7 @@
         color:rgba(255,195,151,1);
     }
     .user-info {
+        background: #fff;
         li{
             .flex;
             .flex-align;

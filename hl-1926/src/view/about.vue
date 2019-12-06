@@ -18,7 +18,10 @@
         </div>
     </section>
 </template>
-<style lang="less" scoped>
+<style lang="less">
+    #app{
+        background: #fff;
+    }
     .demo-warp{
         max-width: 750px;
         margin: 0 auto;
