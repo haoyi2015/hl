@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>如何创建VR内容(How to create VR content)</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+        
+        #info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">Description</div>
+    <script src="/js/three.js"></script>
+    <script src="/vr/WebVR.js"></script>
+    <script>
+        /** 
+         * WEBVR.createButton()
+         * 1，创建按钮
+         * 2，激活按钮。
+         * 每个 3D对象(Object3D) 有一个 matrix 用来保存该对象的位置、旋转和缩放因子。
+         */
+        document.body.appendChild(WEBVR.createButton(renderer));
+        // WebGL兼容性检查
+        if (WEBGL.isWebGLAvailable()) {
+            // Initiate function or other initializations here
+            animate();
+        } else {
+            var warning = WEBGL.getWebGLErrorMessage();
+            document.getElementById('container').appendChild(warning);
+        }
+
+        /**
+         * 启动本地服务
+         * npm install http-server -g
+         * 运行 http-server . -p 8000
+         * Python server服务
+         * //Python 2.x
+            python -m SimpleHTTPServer
+
+            //Python 3.x
+            python -m http.server
+                    */
+    </script>
+</body>
+
+</html>

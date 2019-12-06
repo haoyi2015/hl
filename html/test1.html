@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My first three.js app</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <script src="/js/three.js"></script>
+    <script>
+        var scene = new THREE.Scene();
+        /**
+         *  PerspectiveCamera
+         *  使用参数说明 四个参数
+         *  最终形成的图形叫为 （视椎体）
+         *  创建renderer实例还需要设置渲染空间
+         *  如果你想保持渲染空间的尺寸，但使用一个较低的分辨率，
+         *  你可以在调用setSize的时候设置参数updateStyle为false，比如 setSize(window.innerWidth/2, window.innerHeight/2, false) 
+         *  将使用1/2分辨率来绘制你的应用程序，假定<canvas>为100%的宽高
+         */
+        // 1，THREE.PerspectiveCamera('参数说明：视角', '参数说明：相机拍摄面的长宽比', '参数说明：近裁剪面', '参数说明：远裁剪面')
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        var renderer = new THREE.WebGLRenderer(); // 渲染画布
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 2，准备画布里面实体内容 盒子模型（BoxGeometry）
+        // 几何模型（geometry）
+        var geometry = new THREE.BoxGeometry(1, 1, 1);
+        // 材料（material）
+        var material = new THREE.MeshBasicMaterial({
+            color: 0x00ff00
+        });
+        // 3，网孔(Mesh)
+        var cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        camera.position.z = 5;
+
+        var animate = function() {
+            requestAnimationFrame(animate);
+
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        };
+        animate();
+    </script>
+</body>
+
+</html>
