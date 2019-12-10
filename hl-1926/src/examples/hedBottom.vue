@@ -1,7 +1,7 @@
 <template>
     <section class="views">
         <!-- framework7 只是头部固定-->
-        <div class="framework7 page-group">
+        <div class="framework7 page-group" v-if="open=='hed'">
             <div class="navbar">
                 <div class="navbar-inner">navbar</div>
             </div>
@@ -18,7 +18,7 @@
             </div>
         </div>
         <!-- sui-demo 头部，底部固定 中间-->
-        <div class="sui-page-group" v-if="false">
+        <div class="sui-page-group" v-if="open=='hed_bom'">
             <div class="sui-page sui-page-current" id="page-index">
                 <header class="sui-bar sui-bar-nav">
                     <h1 class="sui-title">header</h1>
@@ -41,9 +41,6 @@
     </section>
 </template>
 <style lang="less" scoped>
-    body{
-        background: #fff;
-    }
     //针对body设置样式
     .overflowHide {
         position: fixed;
@@ -278,7 +275,7 @@
     .sui-list-block .sui-item-content {
         box-sizing: border-box;
         padding-left: 0.75rem;
-        min-height: 2.2rem;
+        min-height: 1.2rem;
         display: -webkit-box;
         display: -webkit-flex;
         display: flex;
@@ -288,7 +285,7 @@
         -webkit-box-align: center;
         -webkit-align-items: center;
         align-items: center;
-        border-bottom: 1px solid #FF5722;
+        border-bottom: 1px solid #666;
     }
     .modal{
         div.cont{
@@ -330,7 +327,7 @@
 export default {
     data () {
         return {
-            open: false
+            open: this.$route.query.route
         }
     },
     methods: {

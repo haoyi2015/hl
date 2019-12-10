@@ -26,6 +26,8 @@ const ShopDetail = resolve => require(['./userApp/shopDetail'], resolve)
 const TaskCenter = resolve => require(['./userApp/taskCenter'], resolve)
 const ShopStation = resolve => require(['./userApp/shopStation'], resolve)
 const UserInfo = resolve => require(['./userApp/userInfo'], resolve)
+    // 商品信息
+const ShopDetailCont = resolve => require(['./userApp/vDetail'], resolve)
 
 import About from './demo/About.vue'
 import Examples from './demo/Examples.vue'
@@ -171,6 +173,10 @@ let routes = [{
         path: '/user-info',
         name: 'UserInfo',
         component: UserInfo
+    }, {
+        path: '/shop-detail-cont',
+        name: 'ShopDetailCont',
+        component: ShopDetailCont
     },
     {
         path: '/examples',

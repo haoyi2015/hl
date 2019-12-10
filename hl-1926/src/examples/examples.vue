@@ -61,6 +61,14 @@
             </div>
             <div class="hl-cell__ft">商品图片列表通用页面</div>
         </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/shop-detail-cont">
+                    商品展示
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">商品展示页面</div>
+        </div>
         <div class="had-page">JS弹窗操作</div>
         <div class="hl-cell hl-cells">
             <div class="hl-cell__bd" @click="openMini">mini弹窗</div>
@@ -243,11 +251,19 @@
         <div class="had-page">布局相关</div>
         <div class="hl-cell hl-cells">
             <div class="hl-cell__bd">
-                <router-link to="/hed-bottom">
-                    布局盒子
+                <router-link to="/hed-bottom?route=hed">
+                    头部固定
                 </router-link>
             </div>
-            <div class="hl-cell__ft">（头部和底部固定中间滚动）可参考此实例</div>
+            <div class="hl-cell__ft"> 头部固定中间内容滚动，可参考此实例</div>
+        </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/hed-bottom?route=hed_bom">
+                    头部和底部固定
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">（头部和底部固定中间内容区域滚动）可参考此实例</div>
         </div>
         <div class="had-page">移动端自定义键盘</div>
         <div class="hl-cell hl-cells">

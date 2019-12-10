@@ -1,5 +1,5 @@
 <template>
-    <section class="user-center p-l-30 p-r-30">
+    <section class="user-center p-l-30 p-r-30 p-b-20">
         <header class="user-hed p-t-22">
             <div class="user-img">
                 <img src="../assets/userApp/user_slices/user-icon.jpg" alt="">
@@ -132,7 +132,7 @@
         color:rgba(255,195,151,1);
     }
     .user-center{
-        max-width: 540px;
+        // max-width: 540px;
         margin: 0 auto;
         background: #fff;
     }
@@ -293,7 +293,7 @@
         bottom: 0;
         left: 50%;
         width: 100%;
-        max-width: 540px;
+        max-width: 750px;
         transform:translateX(-50%);
         .cont{
             .flex;
