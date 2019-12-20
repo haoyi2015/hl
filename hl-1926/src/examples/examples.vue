@@ -348,6 +348,14 @@
             </div>
             <div class="hl-cell__ft">可实现文本复制</div>
         </div>
+        <div class="hl-cell hl-cells">
+            <div class="hl-cell__bd">
+                <router-link to="/vuex-demo">
+                    Vuex-价格加减法
+                </router-link>
+            </div>
+            <div class="hl-cell__ft">Vuex小栗子</div>
+        </div>
         <!--modal相关-->
         <section>
             <!--mini弹窗-->

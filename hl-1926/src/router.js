@@ -29,6 +29,9 @@ const UserInfo = resolve => require(['./userApp/userInfo'], resolve)
     // 商品信息
 const ShopDetailCont = resolve => require(['./userApp/vDetail'], resolve)
 
+// Vuex 状态管理器
+const vuexStore = resolve => require(['./todo/todo'], resolve)
+
 import About from './demo/About.vue'
 import Examples from './demo/Examples.vue'
 
@@ -366,6 +369,11 @@ let routes = [{
             path: ':id',
             component: MusicList
         }]
+    },
+    {
+        path: '/vuex-demo',
+        name: 'vuexStore',
+        component: vuexStore,
     }
 ]
 
