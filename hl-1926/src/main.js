@@ -24,7 +24,7 @@ Vue.config.productionTip = false
 
 //跳转前设置title
 router.beforeEach((to, from, next) => {
-    window.document.title = 'vue实栗项目' //to.meta.title;
+    window.document.title = 'vue实在栗子🌰' //to.meta.title;
     next();
 });
 //跳转后设置scroll为原点
