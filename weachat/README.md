@@ -5,7 +5,7 @@
 <p> </p>
 
 <!-- <p align="center"><img src="./demo/qrcode.png" height="180"></p> -->
-<p align="center"><span>扫码体验小程序</span><span>       </span><span>关注作者公众号</span></p>
+<!-- <p align="center"><span>扫码体验小程序</span><span>       </span><span>关注作者公众号</span></p> -->
 
 <p> </p>
 
